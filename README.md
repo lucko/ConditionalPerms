@@ -22,7 +22,7 @@ The general usage is `cperms.condition.parameter.your.node`, or if a parameter i
 | in_gamemode      | If in a certain gamemode     | the gamemode     |
 | in_world         | If in a certain world        | the world        |
 | is_flying        | If flying                    | n/a              |
-| in_region        | In in a WorldGuard region    | the region       |
+| in_region        | If in a WorldGuard region    | the region       |
 
 More conditions coming soon. Feel free to PR new ones.
 

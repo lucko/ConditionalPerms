@@ -1,0 +1,14 @@
+name: ConditionalPerms
+author: Luck
+version: ${project.version}
+main: me.lucko.conditionalperms.ConditionalPerms
+softdepend: [WorldGuard]
+description: Define permissions that only apply when conditions are met
+commands:
+  cperms:
+    usage: /cperms
+    description: Main command
+permissions:
+  conditionalperms.reload:
+    description: Permission to reload all online users
+    default: op

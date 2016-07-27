@@ -17,12 +17,22 @@ For example, granting access to `bans.banhammer` only when a user is in Creative
 ### Available conditions:
 The general usage is `cperms.condition.parameter.your.node`, or if a parameter is not required, `cperms.condition.your.node`. You can negate permissions by adding a `!` to the start of the condition.
 
-| Condition        | Description                  | Parameters       |
-|------------------|------------------------------|------------------|
-| in_gamemode      | If in a certain gamemode     | the gamemode     |
-| in_world         | If in a certain world        | the world        |
-| is_flying        | If flying                    | n/a              |
-| in_region        | If in a WorldGuard region    | the region       |
+| Condition           | Description                     | Parameters       |
+|---------------------|---------------------------------|------------------|
+| in_gamemode         | If in a certain gamemode        | the gamemode     |
+| in_world            | If in a certain world           | the world        |
+| is_flying           | If flying                       | n/a              |
+| in_region           | If in a WorldGuard region       | the region       |
+| facs_land_none      | If in a Factions winderness     | n/a              |
+| facs_land_warzone   | If in a Factions warzone        | n/a              |
+| facs_land_safezone  | If in a Factions safezone       | n/a              |
+| facs_land_ally      | If in an ally factions land     | n/a              |
+| facs_land_neutral   | If in a neutral factions land   | n/a              |
+| facs_land_enemy     | If in an enemy factions land    | n/a              |
+| facs_land_truce     | If in a truce factions land     | n/a              |
+| facs_land_own       | If in own factions land         | n/a              |
+
+Supports (pretty much) any version of Factions and the recent WorldGuard versions.
 
 More conditions coming soon. Feel free to PR new ones.
 

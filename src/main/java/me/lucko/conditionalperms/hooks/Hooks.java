@@ -10,6 +10,9 @@ public class Hooks {
     @Getter
     private WorldGuardHook worldGuardHook = null;
 
+    @Getter
+    private FactionsHook factionsHook = null;
+
     public Hooks(Plugin plugin) {
         this.plugin = plugin;
     }
@@ -22,6 +25,17 @@ public class Hooks {
             if (pm.isPluginEnabled("WorldGuard")) {
                 worldGuardHook = new WorldGuardHook(plugin);
                 plugin.getLogger().info("Hooked with WorldGuard...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            worldGuardHook = null;
+        }
+
+        // Hook Factions
+        try {
+            if (pm.isPluginEnabled("Factions")) {
+                factionsHook = new FactionsHook(plugin);
+                plugin.getLogger().info("Hooked with Factions...");
             }
         } catch (Exception e) {
             e.printStackTrace();

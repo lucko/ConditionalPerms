@@ -38,6 +38,38 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>false</minimizeJar>
+                            <relocations>
+                                <relocation>
+                                    <pattern>me.markeh.factionsframework</pattern>
+                                    <shadedPattern>me.lucko.conditionalperms.lib.factionsframework</shadedPattern>
+                                    <excludes>
+                                        <exclude>me.markeh.factionsframework.layer.layer_1_6.*</exclude>
+                                        <exclude>me.markeh.factionsframework.layer.layer_1_8.*</exclude>
+                                        <exclude>me.markeh.factionsframework.layer.layer_2_6.*</exclude>
+                                        <exclude>me.markeh.factionsframework.layer.layer_2_7.*</exclude>
+                                        <exclude>me.markeh.factionsframework.layer.layer_2_8_2.*</exclude>
+                                        <exclude>me.markeh.factionsframework.layer.layer_2_8_6.*</exclude>
+                                        <exclude>me.markeh.factionsframework.layer.layer_2_8_8.*</exclude>
+                                        <exclude>me.markeh.factionsframework.layer.layer_2_8_16.*</exclude>
+                                    </excludes>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -49,6 +81,10 @@
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
+        </repository>
+        <repository>
+            <id>luck-repo</id>
+            <url>https://ci.lucko.me/plugin/repository/everything/</url>
         </repository>
     </repositories>
 
@@ -66,6 +102,13 @@
             <artifactId>worldguard</artifactId>
             <version>6.1.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <!--FactionsFramework-->
+        <dependency>
+            <groupId>me.markeh.factionsframework</groupId>
+            <artifactId>factionsframework-project</artifactId>
+            <version>1.2.0</version>
+            <scope>compile</scope>
         </dependency>
         <!--Lombok-->
         <dependency>

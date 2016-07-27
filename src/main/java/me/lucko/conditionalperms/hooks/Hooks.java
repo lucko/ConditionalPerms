@@ -43,4 +43,16 @@ public class Hooks {
         }
 
     }
+
+    public void shutdown() {
+        // Unhook Factions
+        try {
+            if (factionsHook != null) {
+                factionsHook.shutdown();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            worldGuardHook = null;
+        }
+    }
 }

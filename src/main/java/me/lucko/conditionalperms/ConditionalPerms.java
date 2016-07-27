@@ -39,6 +39,11 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
         hooks.init();
     }
 
+    @Override
+    public void onDisable() {
+        hooks.shutdown();
+    }
+
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent e) {
         attachments.put(e.getPlayer().getUniqueId(), e.getPlayer().addAttachment(this));
@@ -119,10 +124,10 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                     continue;
                 }
 
-                final ICondition c = condition.getCondition();
+                final AbstractCondition c = condition.getCondition();
 
                 boolean shouldApply;
-                if (c.needsParameter()) {
+                if (c.isParameterNeeded()) {
 
                     // re-check node length, as the parameter takes up one space
                     if (parts.size() < 3) {
@@ -138,7 +143,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                     continue;
                 }
 
-                final String toApply = StringUtils.join(parts.subList(c.needsParameter() ? 3 : 2, parts.size()), ".");
+                final String toApply = StringUtils.join(parts.subList(c.isParameterNeeded() ? 3 : 2, parts.size()), ".");
                 attachment.setPermission(toApply, true);
                 work = true;
                 applied.add(pa.getPermission());

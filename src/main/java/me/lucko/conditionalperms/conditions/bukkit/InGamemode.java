@@ -1,19 +1,14 @@
 package me.lucko.conditionalperms.conditions.bukkit;
 
-import me.lucko.conditionalperms.ConditionalPerms;
-import me.lucko.conditionalperms.ICondition;
+import me.lucko.conditionalperms.AbstractCondition;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
-public class InGamemode implements ICondition {
-    private ConditionalPerms plugin;
-
-    @Override
-    public void init(ConditionalPerms plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+public class InGamemode extends AbstractCondition {
+    public InGamemode() {
+        super(true);
     }
 
     @Override
@@ -26,13 +21,8 @@ public class InGamemode implements ICondition {
         }
     }
 
-    @Override
-    public boolean needsParameter() {
-        return true;
-    }
-
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent e) {
-        plugin.refreshPlayerDelay(1L, e.getPlayer());
+        getPlugin().refreshPlayerDelay(1L, e.getPlayer());
     }
 }

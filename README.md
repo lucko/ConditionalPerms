@@ -36,5 +36,5 @@ Supports (pretty much) any version of Factions and the recent WorldGuard version
 
 More conditions coming soon. Feel free to PR new ones.
 
-### Mode info
+### More info
 You can reload all online users (for example after you give a new permission) using the **/cperms reload** command. The permission needed to use this is **conditionalperms.reload**.

@@ -1,18 +1,13 @@
 package me.lucko.conditionalperms.conditions.bukkit;
 
-import me.lucko.conditionalperms.ConditionalPerms;
-import me.lucko.conditionalperms.ICondition;
+import me.lucko.conditionalperms.AbstractCondition;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-public class InWorld implements ICondition {
-    private ConditionalPerms plugin;
-
-    @Override
-    public void init(ConditionalPerms plugin) {
-        this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+public class InWorld extends AbstractCondition {
+    public InWorld() {
+        super(true);
     }
 
     @Override
@@ -20,13 +15,8 @@ public class InWorld implements ICondition {
         return player.getWorld().getName().equalsIgnoreCase(parameter);
     }
 
-    @Override
-    public boolean needsParameter() {
-        return true;
-    }
-
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent e) {
-        plugin.refreshPlayer(e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer());
     }
 }

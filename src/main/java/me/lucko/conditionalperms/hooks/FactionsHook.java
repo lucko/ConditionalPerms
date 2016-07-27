@@ -35,6 +35,10 @@ public class FactionsHook implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    public void shutdown() {
+        FactionsFramework.get().stop();
+    }
+
     public FactionsRegion getRegion(Player player) {
         final FPlayer p = FPlayers.getBySender(player);
         if (p == null) return null;

@@ -28,6 +28,6 @@ enum Condition {
     FACS_LAND_TRUCE(new InFactionsLand(FactionsHook.FactionsRegion.TRUCE)),
     FACS_LAND_OWN(new InFactionsLand(FactionsHook.FactionsRegion.OWN));
 
-    private ICondition condition;
+    private AbstractCondition condition;
 
 }

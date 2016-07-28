@@ -1,6 +1,6 @@
 package me.lucko.conditionalperms.conditions.worldguard;
 
-import me.lucko.conditionalperms.AbstractCondition;
+import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.events.WorldGuardRegionEnterEvent;
 import me.lucko.conditionalperms.events.WorldGuardRegionLeaveEvent;
 import org.bukkit.entity.Player;

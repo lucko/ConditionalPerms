@@ -1,15 +1,15 @@
 package me.lucko.conditionalperms.conditions.factions;
 
-import me.lucko.conditionalperms.AbstractCondition;
+import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.events.FactionsRegionChangeEvent;
-import me.lucko.conditionalperms.hooks.FactionsHook;
+import me.lucko.conditionalperms.utils.FactionsRegion;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
 public class InFactionsLand extends AbstractCondition {
-    private final FactionsHook.FactionsRegion r;
+    private final FactionsRegion r;
 
-    public InFactionsLand(FactionsHook.FactionsRegion r) {
+    public InFactionsLand(FactionsRegion r) {
         super(false);
         this.r = r;
     }

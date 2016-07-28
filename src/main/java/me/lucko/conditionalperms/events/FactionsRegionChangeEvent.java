@@ -1,7 +1,7 @@
 package me.lucko.conditionalperms.events;
 
 import lombok.Getter;
-import me.lucko.conditionalperms.hooks.FactionsHook;
+import me.lucko.conditionalperms.utils.FactionsRegion;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
@@ -10,12 +10,12 @@ public class FactionsRegionChangeEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     @Getter
-    private final FactionsHook.FactionsRegion from;
+    private final FactionsRegion from;
 
     @Getter
-    private final FactionsHook.FactionsRegion to;
+    private final FactionsRegion to;
 
-    public FactionsRegionChangeEvent(Player who, FactionsHook.FactionsRegion from, FactionsHook.FactionsRegion to) {
+    public FactionsRegionChangeEvent(Player who, FactionsRegion from, FactionsRegion to) {
         super(who);
         this.from = from;
         this.to = to;

@@ -27,6 +27,7 @@ public class Hooks {
                 plugin.getLogger().info("Hooked with WorldGuard...");
             }
         } catch (Exception e) {
+            plugin.getLogger().severe("Exception thrown whilst hooking with WorldGuard...");
             e.printStackTrace();
             worldGuardHook = null;
         }
@@ -38,8 +39,9 @@ public class Hooks {
                 plugin.getLogger().info("Hooked with Factions...");
             }
         } catch (Exception e) {
+            plugin.getLogger().severe("Exception thrown whilst hooking with Factions...");
             e.printStackTrace();
-            worldGuardHook = null;
+            factionsHook = null;
         }
 
     }
@@ -52,7 +54,6 @@ public class Hooks {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            worldGuardHook = null;
         }
     }
 }

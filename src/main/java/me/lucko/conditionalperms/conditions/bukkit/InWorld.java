@@ -1,6 +1,6 @@
 package me.lucko.conditionalperms.conditions.bukkit;
 
-import me.lucko.conditionalperms.AbstractCondition;
+import me.lucko.conditionalperms.conditions.AbstractCondition;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;

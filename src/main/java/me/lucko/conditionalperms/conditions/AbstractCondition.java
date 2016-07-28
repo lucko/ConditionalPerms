@@ -1,7 +1,8 @@
-package me.lucko.conditionalperms;
+package me.lucko.conditionalperms.conditions;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import me.lucko.conditionalperms.ConditionalPerms;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 

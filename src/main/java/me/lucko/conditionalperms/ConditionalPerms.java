@@ -1,6 +1,7 @@
 package me.lucko.conditionalperms;
 
 import lombok.Getter;
+import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.hooks.Hooks;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -130,7 +131,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                 if (c.isParameterNeeded()) {
 
                     // re-check node length, as the parameter takes up one space
-                    if (parts.size() < 3) {
+                    if (parts.size() < 4) {
                         continue;
                     }
 

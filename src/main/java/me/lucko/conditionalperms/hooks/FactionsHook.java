@@ -1,6 +1,7 @@
 package me.lucko.conditionalperms.hooks;
 
 import me.lucko.conditionalperms.events.FactionsRegionChangeEvent;
+import me.lucko.conditionalperms.utils.FactionsRegion;
 import me.markeh.factionsframework.FactionsFramework;
 import me.markeh.factionsframework.entities.FPlayer;
 import me.markeh.factionsframework.entities.FPlayers;
@@ -23,7 +24,7 @@ import java.util.UUID;
 
 public class FactionsHook implements Listener {
     private final Plugin plugin;
-    private Map<UUID, FactionsHook.FactionsRegion> regions = new HashMap<>();
+    private Map<UUID, FactionsRegion> regions = new HashMap<>();
 
     FactionsHook(Plugin plugin) {
         this.plugin = plugin;
@@ -102,8 +103,8 @@ public class FactionsHook implements Listener {
             return;
         }
 
-        final FactionsHook.FactionsRegion from = regions.get(e.getPlayer().getUniqueId());
-        final FactionsHook.FactionsRegion to = getRegion(e.getPlayer());
+        final FactionsRegion from = regions.get(e.getPlayer().getUniqueId());
+        final FactionsRegion to = getRegion(e.getPlayer());
 
         if (from.equals(to)) {
             return;
@@ -111,17 +112,6 @@ public class FactionsHook implements Listener {
 
         plugin.getServer().getPluginManager().callEvent(new FactionsRegionChangeEvent(e.getPlayer(), from, to));
         regions.put(e.getPlayer().getUniqueId(), to);
-    }
-
-    public enum FactionsRegion {
-        NONE, // Wilderness
-        WARZONE,
-        SAFEZONE,
-        ALLY, // In another factions land (that they're an ally to)
-        NEUTRAL, // In another factions land (that they're neutral to)
-        ENEMY, // In another factions land (that they're an enemy to)
-        TRUCE, // In another factions land (that they're in a truce to)
-        OWN // In their own factions land
     }
 
 }

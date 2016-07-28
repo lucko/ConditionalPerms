@@ -1,16 +1,16 @@
-package me.lucko.conditionalperms.hooks;
+package me.lucko.conditionalperms.hooks.impl;
 
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import me.lucko.conditionalperms.events.WorldGuardRegionEnterEvent;
-import me.lucko.conditionalperms.events.WorldGuardRegionLeaveEvent;
+import me.lucko.conditionalperms.events.PlayerEnterRegionEvent;
+import me.lucko.conditionalperms.events.PlayerLeaveRegionEvent;
+import me.lucko.conditionalperms.hooks.AbstractHook;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -18,14 +18,17 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
-public class WorldGuardHook implements Listener {
-
+public class WorldGuardHook extends AbstractHook {
     private WorldGuardPlugin worldGuard;
     private Map<UUID, Set<String>> regions = new HashMap<>();
 
-    WorldGuardHook(Plugin plugin) {
-        worldGuard = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    public WorldGuardHook(Plugin plugin) {
+        super(plugin);
+    }
+
+    @Override
+    public void init() {
+        worldGuard = (WorldGuardPlugin) getPlugin().getServer().getPluginManager().getPlugin("WorldGuard");
     }
 
     public Set<String> getRegions(Player player) {
@@ -77,14 +80,14 @@ public class WorldGuardHook implements Listener {
         for (String s : previouslyIn) {
             if (!now.contains(s)) {
                 // Fire RegionLeaveEvent
-                worldGuard.getServer().getPluginManager().callEvent(new WorldGuardRegionLeaveEvent(e.getPlayer(), s));
+                worldGuard.getServer().getPluginManager().callEvent(new PlayerLeaveRegionEvent(e.getPlayer(), s));
             }
         }
 
         for (String s : now) {
             if (!previouslyIn.contains(s)) {
                 // Fire RegionEnterEvent
-                worldGuard.getServer().getPluginManager().callEvent(new WorldGuardRegionEnterEvent(e.getPlayer(), s));
+                worldGuard.getServer().getPluginManager().callEvent(new PlayerEnterRegionEvent(e.getPlayer(), s));
             }
         }
 

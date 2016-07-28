@@ -1,13 +1,14 @@
-package me.lucko.conditionalperms.hooks;
+package me.lucko.conditionalperms.hooks.impl;
 
+import me.lucko.conditionalperms.events.PlayerEnterCombatEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveCombatEvent;
+import me.lucko.conditionalperms.hooks.AbstractHook;
 import net.minelink.ctplus.CombatTagPlus;
 import net.minelink.ctplus.TagManager;
 import net.minelink.ctplus.event.PlayerCombatTagEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -15,16 +16,19 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class CombatTagPlusHook implements Listener {
-
-    private final TagManager manager;
+public class CombatTagPlusHook extends AbstractHook {
+    private TagManager manager;
     private final Set<UUID> taggedPlayers = new HashSet<>();
 
     CombatTagPlusHook(Plugin plugin) {
-        CombatTagPlus combatTagPlus = (CombatTagPlus) plugin.getServer().getPluginManager().getPlugin("CombatTagPlus");
+        super(plugin);
+    }
+
+    @Override
+    public void init() {
+        CombatTagPlus combatTagPlus = (CombatTagPlus) getPlugin().getServer().getPluginManager().getPlugin("CombatTagPlus");
         manager = combatTagPlus.getTagManager();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        plugin.getServer().getScheduler().runTaskTimer(plugin, new CheckTagTask(), 0L, 20L);
+        getPlugin().getServer().getScheduler().runTaskTimer(getPlugin(), new CheckTagTask(), 0L, 20L);
     }
 
     public boolean isTagged(Player player) {
@@ -39,6 +43,9 @@ public class CombatTagPlusHook implements Listener {
         if (e.getAttacker() != null) {
             taggedPlayers.add(e.getAttacker().getUniqueId());
         }
+
+        // Pass on CombatTagPlus events if the hook is enabled.
+        Bukkit.getPluginManager().callEvent(new PlayerEnterCombatEvent(e.getPlayer(), e.getVictim(), e.getAttacker()));
     }
 
     @EventHandler

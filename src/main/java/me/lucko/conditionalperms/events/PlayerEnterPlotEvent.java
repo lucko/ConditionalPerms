@@ -1,19 +1,14 @@
 package me.lucko.conditionalperms.events;
 
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public class WorldGuardRegionEnterEvent extends PlayerEvent {
+public class PlayerEnterPlotEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
-    @Getter
-    private final String region;
-
-    public WorldGuardRegionEnterEvent(Player who, String region) {
+    public PlayerEnterPlotEvent(Player who) {
         super(who);
-        this.region = region;
     }
 
     @Override

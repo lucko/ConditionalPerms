@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public class FactionsRegionChangeEvent extends PlayerEvent {
+public class PlayerFactionsRegionChangeEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     @Getter
@@ -15,7 +15,7 @@ public class FactionsRegionChangeEvent extends PlayerEvent {
     @Getter
     private final FactionsRegion to;
 
-    public FactionsRegionChangeEvent(Player who, FactionsRegion from, FactionsRegion to) {
+    public PlayerFactionsRegionChangeEvent(Player who, FactionsRegion from, FactionsRegion to) {
         super(who);
         this.from = from;
         this.to = to;

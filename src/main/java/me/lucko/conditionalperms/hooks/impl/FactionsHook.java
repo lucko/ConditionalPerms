@@ -1,6 +1,7 @@
-package me.lucko.conditionalperms.hooks;
+package me.lucko.conditionalperms.hooks.impl;
 
-import me.lucko.conditionalperms.events.FactionsRegionChangeEvent;
+import me.lucko.conditionalperms.events.PlayerFactionsRegionChangeEvent;
+import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.utils.FactionsRegion;
 import me.markeh.factionsframework.FactionsFramework;
 import me.markeh.factionsframework.entities.FPlayer;
@@ -22,20 +23,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class FactionsHook implements Listener {
-    private final Plugin plugin;
+public class FactionsHook extends AbstractHook {
     private Map<UUID, FactionsRegion> regions = new HashMap<>();
 
     FactionsHook(Plugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
+    }
 
-        FactionsFramework.load(plugin);
+    @Override
+    public void init() {
+        FactionsFramework.load(getPlugin());
         // We don't need events
         HandlerList.unregisterAll(EventsLayer.get());
         FactionsFramework.get();
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    @Override
     public void shutdown() {
         FactionsFramework.get().stop();
     }
@@ -110,7 +113,7 @@ public class FactionsHook implements Listener {
             return;
         }
 
-        plugin.getServer().getPluginManager().callEvent(new FactionsRegionChangeEvent(e.getPlayer(), from, to));
+        getPlugin().getServer().getPluginManager().callEvent(new PlayerFactionsRegionChangeEvent(e.getPlayer(), from, to));
         regions.put(e.getPlayer().getUniqueId(), to);
     }
 

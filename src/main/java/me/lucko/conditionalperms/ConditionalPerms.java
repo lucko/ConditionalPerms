@@ -2,7 +2,7 @@ package me.lucko.conditionalperms;
 
 import lombok.Getter;
 import me.lucko.conditionalperms.conditions.AbstractCondition;
-import me.lucko.conditionalperms.hooks.Hooks;
+import me.lucko.conditionalperms.hooks.HookManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
     private final Map<UUID, PermissionAttachment> attachments = new HashMap<>();
 
     @Getter
-    private final Hooks hooks = new Hooks(this);
+    private final HookManager hookManager = new HookManager(this);
 
     @Override
     public void onEnable() {
@@ -37,12 +37,12 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
             condition.getCondition().init(this);
         }
 
-        hooks.init();
+        hookManager.init();
     }
 
     @Override
     public void onDisable() {
-        hooks.shutdown();
+        hookManager.shutdown();
     }
 
     @EventHandler

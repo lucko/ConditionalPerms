@@ -23,6 +23,7 @@ The general usage is `cperms.condition.parameter.your.node`, or if a parameter i
 | in_world            | If in a certain world           | the world        |
 | is_flying           | If flying                       | n/a              |
 | in_region           | If in a WorldGuard region       | the region       |
+| in_combat           | If combat tagged                | n/a              |
 | facs_land_none      | If in a Factions winderness     | n/a              |
 | facs_land_warzone   | If in a Factions warzone        | n/a              |
 | facs_land_safezone  | If in a Factions safezone       | n/a              |
@@ -32,7 +33,7 @@ The general usage is `cperms.condition.parameter.your.node`, or if a parameter i
 | facs_land_truce     | If in a truce factions land     | n/a              |
 | facs_land_own       | If in own factions land         | n/a              |
 
-Supports (pretty much) any version of Factions and the recent WorldGuard versions.
+Supports (pretty much) any version of Factions, the recent WorldGuard versions, and CombatTagPlus.
 
 More conditions coming soon. Feel free to PR new ones.
 

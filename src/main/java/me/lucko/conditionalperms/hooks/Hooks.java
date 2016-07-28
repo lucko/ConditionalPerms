@@ -13,6 +13,9 @@ public class Hooks {
     @Getter
     private FactionsHook factionsHook = null;
 
+    @Getter
+    private CombatTagPlusHook combatTagPlusHook = null;
+
     public Hooks(Plugin plugin) {
         this.plugin = plugin;
     }
@@ -42,6 +45,18 @@ public class Hooks {
             plugin.getLogger().severe("Exception thrown whilst hooking with Factions...");
             e.printStackTrace();
             factionsHook = null;
+        }
+
+        // Hook CombatTagPlus
+        try {
+            if (pm.isPluginEnabled("CombatTagPlus")) {
+                combatTagPlusHook = new CombatTagPlusHook(plugin);
+                plugin.getLogger().info("Hooked with CombatTagPlus...");
+            }
+        } catch (Exception e) {
+            plugin.getLogger().severe("Exception thrown whilst hooking with CombatTagPlus...");
+            e.printStackTrace();
+            combatTagPlusHook = null;
         }
 
     }

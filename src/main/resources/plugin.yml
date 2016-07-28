@@ -2,7 +2,7 @@ name: ConditionalPerms
 author: Luck
 version: ${project.version}
 main: me.lucko.conditionalperms.ConditionalPerms
-softdepend: [WorldGuard, Factions]
+softdepend: [WorldGuard, Factions, CombatTagPlus]
 description: Define permissions that only apply when conditions are met
 commands:
   cperms:

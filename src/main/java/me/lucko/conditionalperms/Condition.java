@@ -6,6 +6,7 @@ import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.conditions.bukkit.InGamemode;
 import me.lucko.conditionalperms.conditions.bukkit.InWorld;
 import me.lucko.conditionalperms.conditions.bukkit.IsFlying;
+import me.lucko.conditionalperms.conditions.combattagplus.InCombat;
 import me.lucko.conditionalperms.conditions.factions.InFactionsLand;
 import me.lucko.conditionalperms.conditions.worldguard.InRegion;
 import me.lucko.conditionalperms.utils.FactionsRegion;
@@ -20,6 +21,8 @@ enum Condition {
 
     IN_REGION(new InRegion()),
 
+    IN_COMBAT(new InCombat()),
+
     FACS_LAND_NONE(new InFactionsLand(FactionsRegion.NONE)),
     FACS_LAND_WARZONE(new InFactionsLand(FactionsRegion.WARZONE)),
     FACS_LAND_SAFEZONE(new InFactionsLand(FactionsRegion.SAFEZONE)),
@@ -27,7 +30,7 @@ enum Condition {
     FACS_LAND_NEUTRAL(new InFactionsLand(FactionsRegion.NEUTRAL)),
     FACS_LAND_ENEMY(new InFactionsLand(FactionsRegion.ENEMY)),
     FACS_LAND_TRUCE(new InFactionsLand(FactionsRegion.TRUCE)),
-    FACS_LAND_OWN(new InFactionsLand(FactionsRegion.OWN)), ;
+    FACS_LAND_OWN(new InFactionsLand(FactionsRegion.OWN));
 
     private AbstractCondition condition;
 

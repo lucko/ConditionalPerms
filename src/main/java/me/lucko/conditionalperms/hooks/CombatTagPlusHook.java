@@ -17,17 +17,17 @@ import java.util.UUID;
 
 public class CombatTagPlusHook implements Listener {
 
-    private CombatTagPlus combatTagPlus;
-    private Set<UUID> taggedPlayers = new HashSet<>();
+    private final TagManager manager;
+    private final Set<UUID> taggedPlayers = new HashSet<>();
 
     CombatTagPlusHook(Plugin plugin) {
-        combatTagPlus = (CombatTagPlus) plugin.getServer().getPluginManager().getPlugin("CombatTagPlus");
+        CombatTagPlus combatTagPlus = (CombatTagPlus) plugin.getServer().getPluginManager().getPlugin("CombatTagPlus");
+        manager = combatTagPlus.getTagManager();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         plugin.getServer().getScheduler().runTaskTimer(plugin, new CheckTagTask(), 0L, 20L);
     }
 
     public boolean isTagged(Player player) {
-        final TagManager manager = combatTagPlus.getTagManager();
         return manager.isTagged(player.getUniqueId());
     }
 
@@ -63,7 +63,7 @@ public class CombatTagPlusHook implements Listener {
 
             for (Player p : untag) {
                 taggedPlayers.remove(p.getUniqueId());
-                combatTagPlus.getServer().getPluginManager().callEvent(new PlayerLeaveCombatEvent(p));
+                Bukkit.getPluginManager().callEvent(new PlayerLeaveCombatEvent(p));
             }
         }
     }

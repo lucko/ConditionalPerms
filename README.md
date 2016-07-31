@@ -7,15 +7,15 @@ Define permissions that only apply when conditions are met
 ## Usage
 ConditionalPerms works with any existing permissions plugin, and applies certain permissions only if a condition is met. There is no configuration. You setup your conditions using permission nodes.
 
-For example, if you wanted to grant a user access to `essentials.fly`, but only in the `world_nether` world, you would give them the `cperms.in_world.world_nether.essentials.fly` permission.
+For example, if you wanted to grant a user access to `essentials.fly`, but only in the `world_nether` world, you would give them the `cperms.in_world=world_nether.essentials.fly` permission.
 
-If you wanted to grant them fly in all worlds except `world_nether`, you would set `cperms.!in_world.world_nether.essentials.fly`.
+If you wanted to grant them fly in all worlds except `world_nether`, you would set `cperms.!in_world=world_nether.essentials.fly`.
 
 You can also chain nodes together, as they are applied recursively.
-For example, granting access to `bans.banhammer` only when a user is in Creative mode and flying would be done using `cperms.is_flying.cperms.in_gamemode.creative.bans.banhammer`.
+For example, granting access to `bans.banhammer` only when a user is in Creative mode and flying would be done using `cperms.is_flying.cperms.in_gamemode=creative.bans.banhammer`.
 
 ### Available conditions:
-The general usage is `cperms.condition.parameter.your.node`, or if a parameter is not required, `cperms.condition.your.node`. You can negate permissions by adding a `!` to the start of the condition.
+The general usage is `cperms.condition=parameter.your.node`, or if a parameter is not required, `cperms.condition.your.node`. You can negate permissions by adding a `!` to the start of the condition.
 
 | Condition           | Description                     | Parameters       |
 |---------------------|---------------------------------|------------------|

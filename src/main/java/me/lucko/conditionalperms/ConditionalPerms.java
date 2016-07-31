@@ -22,7 +22,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class ConditionalPerms extends JavaPlugin implements Listener {
-    private static final Pattern DOT_SPLIT = Pattern.compile("\\.");
+    private static final Pattern DOT_PATTERN = Pattern.compile("\\.");
+    private static final Pattern EQUALS_PATTERN = Pattern.compile("=");
 
     private final Map<UUID, PermissionAttachment> attachments = new HashMap<>();
 
@@ -89,7 +90,12 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
             work = false;
 
             for (PermissionAttachmentInfo pa : player.getEffectivePermissions()) {
+                // Don't apply negative permissions
                 if (!pa.getValue()) {
+                    continue;
+                }
+
+                if (pa.getPermission().startsWith("cperms.")) {
                     continue;
                 }
 
@@ -97,20 +103,23 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                     continue;
                 }
 
-                final List<String> parts = Arrays.asList(DOT_SPLIT.split(pa.getPermission()));
-                if (parts.size() < 3) {
+                final List<String> parts = Arrays.asList(DOT_PATTERN.split(pa.getPermission()));
+                if (parts.size() <= 2) {
                     continue;
                 }
 
-                if (!parts.get(0).equalsIgnoreCase("cperms")) {
-                    continue;
-                }
-
-                boolean negated = false;
                 String conditionPart = parts.get(1);
-                if (conditionPart.startsWith("!")) {
-                    negated = true;
+
+                boolean negated = conditionPart.startsWith("!");
+                if (negated) {
                     conditionPart = conditionPart.substring(1);
+                }
+
+                String parameter = null;
+                if (conditionPart.contains("=")) {
+                    final String[] parameterSplit = EQUALS_PATTERN.split(conditionPart, 2);
+                    conditionPart = parameterSplit[0];
+                    parameter = parameterSplit[1];
                 }
 
                 Condition condition = null;
@@ -126,25 +135,16 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                 }
 
                 final AbstractCondition c = condition.getCondition();
-
-                boolean shouldApply;
-                if (c.isParameterNeeded()) {
-
-                    // re-check node length, as the parameter takes up one space
-                    if (parts.size() < 4) {
-                        continue;
-                    }
-
-                    shouldApply = c.shouldApply(player, parts.get(2));
-                } else {
-                    shouldApply = c.shouldApply(player, null);
+                if (c.isParameterNeeded() && parameter == null) {
+                    continue;
                 }
 
+                final boolean shouldApply = c.shouldApply(player, parameter);
                 if (negated == shouldApply) {
                     continue;
                 }
 
-                final String toApply = StringUtils.join(parts.subList(c.isParameterNeeded() ? 3 : 2, parts.size()), ".");
+                final String toApply = StringUtils.join(parts.subList(2, parts.size()), ".");
                 attachment.setPermission(toApply, true);
                 work = true;
                 applied.add(pa.getPermission());

@@ -95,7 +95,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                     continue;
                 }
 
-                if (pa.getPermission().startsWith("cperms.")) {
+                if (!pa.getPermission().startsWith("cperms.")) {
                     continue;
                 }
 

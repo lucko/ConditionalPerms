@@ -1,5 +1,6 @@
 package me.lucko.conditionalperms.hooks.impl;
 
+import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.events.PlayerEnterCombatEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveCombatEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
@@ -10,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ public class CombatTagPlusHook extends AbstractHook {
     private TagManager manager;
     private final Set<UUID> taggedPlayers = new HashSet<>();
 
-    CombatTagPlusHook(Plugin plugin) {
+    CombatTagPlusHook(ConditionalPerms plugin) {
         super(plugin);
     }
 
@@ -38,10 +38,14 @@ public class CombatTagPlusHook extends AbstractHook {
     @EventHandler
     public void onPlayerCombatTag(PlayerCombatTagEvent e) {
         if (e.getVictim() != null) {
-            taggedPlayers.add(e.getVictim().getUniqueId());
+            if (shouldCheck(getClass(), e.getVictim().getUniqueId())) {
+                taggedPlayers.add(e.getVictim().getUniqueId());
+            }
         }
         if (e.getAttacker() != null) {
-            taggedPlayers.add(e.getAttacker().getUniqueId());
+            if (shouldCheck(getClass(), e.getVictim().getUniqueId())) {
+                taggedPlayers.add(e.getVictim().getUniqueId());
+            }
         }
 
         // Pass on CombatTagPlus events if the hook is enabled.
@@ -60,6 +64,10 @@ public class CombatTagPlusHook extends AbstractHook {
         public void run() {
             final Set<Player> untag = new HashSet<>();
             for (UUID u : taggedPlayers) {
+                if (!shouldCheck(CombatTagPlusHook.class, u)) {
+                    continue;
+                }
+
                 Player player = Bukkit.getPlayer(u);
                 if (u == null) continue;
 

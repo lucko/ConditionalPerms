@@ -23,6 +23,6 @@ public class InGamemode extends AbstractCondition {
 
     @EventHandler
     public void onGameModeChange(PlayerGameModeChangeEvent e) {
-        getPlugin().refreshPlayerDelay(1L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 1L);
     }
 }

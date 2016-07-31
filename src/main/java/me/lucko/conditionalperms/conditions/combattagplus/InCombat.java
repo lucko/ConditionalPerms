@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 
 public class InCombat extends AbstractCondition {
     public InCombat() {
-        super(false);
+        super(false, CombatTagPlusHook.class);
     }
 
     @Override
@@ -21,15 +21,15 @@ public class InCombat extends AbstractCondition {
     @EventHandler
     public void onTag(PlayerEnterCombatEvent e) {
         if (e.getVictim() != null) {
-            getPlugin().refreshPlayerDelay(1L, e.getVictim());
+            getPlugin().refreshPlayer(e.getVictim(), 1L);
         }
         if (e.getAttacker() != null) {
-            getPlugin().refreshPlayerDelay(1L, e.getAttacker());
+            getPlugin().refreshPlayer(e.getAttacker(), 1L);
         }
     }
 
     @EventHandler
     public void onUnTag(PlayerLeaveCombatEvent e) {
-        getPlugin().refreshPlayerDelay(1L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 1L);
     }
 }

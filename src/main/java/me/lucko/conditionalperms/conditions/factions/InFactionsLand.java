@@ -11,7 +11,7 @@ public class InFactionsLand extends AbstractCondition {
     private final FactionsRegion r;
 
     public InFactionsLand(FactionsRegion r) {
-        super(false);
+        super(false, FactionsHook.class);
         this.r = r;
     }
 
@@ -23,6 +23,6 @@ public class InFactionsLand extends AbstractCondition {
 
     @EventHandler
     public void onRegionChange(PlayerFactionsRegionChangeEvent e) {
-        getPlugin().refreshPlayerDelay(5L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 5L);
     }
 }

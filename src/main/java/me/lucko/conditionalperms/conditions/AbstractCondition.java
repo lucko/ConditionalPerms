@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.lucko.conditionalperms.ConditionalPerms;
+import me.lucko.conditionalperms.hooks.AbstractHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -16,11 +17,26 @@ public abstract class AbstractCondition implements Listener {
     @Getter
     private final boolean parameterNeeded;
 
+    private Class<? extends AbstractHook> neededHook = null;
+
+    public AbstractCondition(boolean parameterNeeded, Class<? extends AbstractHook> neededHook) {
+        this(parameterNeeded);
+        this.neededHook = neededHook;
+    }
+
     public void init(ConditionalPerms plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     public abstract boolean shouldApply(Player player, String parameter);
+
+    public boolean isHookNeeded() {
+        return neededHook != null;
+    }
+
+    public Class<? extends AbstractHook> getNeededHook() {
+        return neededHook;
+    }
 
 }

@@ -1,5 +1,6 @@
 package me.lucko.conditionalperms.hooks.impl;
 
+import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.events.PlayerFactionsRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.utils.FactionsRegion;
@@ -13,11 +14,9 @@ import me.markeh.factionsframework.layer.EventsLayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.UUID;
 public class FactionsHook extends AbstractHook {
     private Map<UUID, FactionsRegion> regions = new HashMap<>();
 
-    FactionsHook(Plugin plugin) {
+    FactionsHook(ConditionalPerms plugin) {
         super(plugin);
     }
 
@@ -103,6 +102,10 @@ public class FactionsHook extends AbstractHook {
     public void onPlayerMove(PlayerMoveEvent e) {
         if (e.getFrom().getChunk().getX() == e.getTo().getChunk().getX() &&
                 e.getFrom().getChunk().getZ() == e.getTo().getChunk().getZ()) {
+            return;
+        }
+
+        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
             return;
         }
 

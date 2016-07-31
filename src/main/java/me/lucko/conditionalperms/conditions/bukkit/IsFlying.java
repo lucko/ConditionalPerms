@@ -17,6 +17,6 @@ public class IsFlying extends AbstractCondition {
 
     @EventHandler
     public void onFlyToggle(PlayerToggleFlightEvent e) {
-        getPlugin().refreshPlayerDelay(1L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 1L);
     }
 }

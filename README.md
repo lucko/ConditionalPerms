@@ -41,3 +41,5 @@ More conditions coming soon. Feel free to PR new ones.
 
 ### More info
 You can reload all online users (for example after you give a new permission) using the **/cperms reload** command. The permission needed to use this is **conditionalperms.reload**.
+
+You can toggle the plugins console debugging output using the **/cperms debug** command. The permission needed to use this is **conditionalperms.debug**.

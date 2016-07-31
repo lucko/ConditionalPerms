@@ -12,3 +12,6 @@ permissions:
   conditionalperms.reload:
     description: Permission to reload all online users
     default: op
+  conditionalperms.debug:
+    description: Permission to toggle debug mode
+    default: op

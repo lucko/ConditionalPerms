@@ -5,6 +5,7 @@ import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.events.PlayerEnterRegionEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveRegionEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
@@ -14,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ public class WorldGuardHook extends AbstractHook {
     private WorldGuardPlugin worldGuard;
     private Map<UUID, Set<String>> regions = new HashMap<>();
 
-    public WorldGuardHook(Plugin plugin) {
+    WorldGuardHook(ConditionalPerms plugin) {
         super(plugin);
     }
 
@@ -71,6 +71,10 @@ public class WorldGuardHook extends AbstractHook {
         if (e.getFrom().getBlockX() == e.getTo().getBlockX() &&
                 e.getFrom().getBlockY() == e.getTo().getBlockY() &&
                 e.getFrom().getBlockZ() == e.getTo().getBlockZ()) {
+            return;
+        }
+
+        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
             return;
         }
 

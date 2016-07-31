@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 
 public class InOwnPlot extends AbstractCondition {
     public InOwnPlot() {
-        super(false);
+        super(false, PlotSquaredHook.class);
     }
 
     @Override
@@ -20,11 +20,11 @@ public class InOwnPlot extends AbstractCondition {
 
     @EventHandler
     public void onPlotEnter(PlayerEnterPlotEvent e) {
-        getPlugin().refreshPlayerDelay(5L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 5L);
     }
 
     @EventHandler
     public void onPlotLeave(PlayerLeavePlotEvent e) {
-        getPlugin().refreshPlayerDelay(5L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 5L);
     }
 }

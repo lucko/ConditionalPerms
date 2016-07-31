@@ -4,14 +4,14 @@ import com.intellectualcrafters.plot.object.Plot;
 import com.intellectualcrafters.plot.object.PlotPlayer;
 import com.plotsquared.bukkit.events.PlayerEnterPlotEvent;
 import com.plotsquared.bukkit.events.PlayerLeavePlotEvent;
+import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.plugin.Plugin;
 
 public class PlotSquaredHook extends AbstractHook {
-    PlotSquaredHook(Plugin plugin) {
+    PlotSquaredHook(ConditionalPerms plugin) {
         super(plugin);
     }
 
@@ -32,11 +32,19 @@ public class PlotSquaredHook extends AbstractHook {
      */
     @EventHandler
     public void onPlayerLeavePlot(PlayerLeavePlotEvent e) {
+        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
+            return;
+        }
+
         Bukkit.getPluginManager().callEvent(new me.lucko.conditionalperms.events.PlayerLeavePlotEvent(e.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerEnterPlotEvent(PlayerEnterPlotEvent e) {
+        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
+            return;
+        }
+
         Bukkit.getPluginManager().callEvent(new me.lucko.conditionalperms.events.PlayerEnterPlotEvent(e.getPlayer()));
     }
 }

@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 
 public class InRegion extends AbstractCondition {
     public InRegion() {
-        super(true);
+        super(true, WorldGuardHook.class);
     }
 
     @Override
@@ -20,11 +20,11 @@ public class InRegion extends AbstractCondition {
 
     @EventHandler
     public void onRegionEnter(PlayerEnterRegionEvent e) {
-        getPlugin().refreshPlayerDelay(1L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 1L);
     }
 
     @EventHandler
     public void onRegionLeave(PlayerLeaveRegionEvent e) {
-        getPlugin().refreshPlayerDelay(1L, e.getPlayer());
+        getPlugin().refreshPlayer(e.getPlayer(), 1L);
     }
 }

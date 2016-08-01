@@ -14,8 +14,7 @@ public class InOwnPlot extends AbstractCondition {
 
     @Override
     public boolean shouldApply(Player player, String parameter) {
-        return getPlugin().getHookManager().isHooked(PlotSquaredHook.class) &&
-                getPlugin().getHookManager().get(PlotSquaredHook.class).isInOwnPlot(player);
+        return getPlugin().getHookManager().get(PlotSquaredHook.class).isInOwnPlot(player);
     }
 
     @EventHandler

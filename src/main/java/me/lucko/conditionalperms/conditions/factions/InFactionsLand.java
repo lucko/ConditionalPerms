@@ -17,8 +17,7 @@ public class InFactionsLand extends AbstractCondition {
 
     @Override
     public boolean shouldApply(Player player, String parameter) {
-        return getPlugin().getHookManager().isHooked(FactionsHook.class) &&
-                getPlugin().getHookManager().get(FactionsHook.class).getRegion(player).equals(r);
+        return getPlugin().getHookManager().get(FactionsHook.class).getRegion(player).equals(r);
     }
 
     @EventHandler

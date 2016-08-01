@@ -1,6 +1,7 @@
 package me.lucko.conditionalperms.hooks;
 
 import lombok.RequiredArgsConstructor;
+import me.lucko.conditionalperms.ConditionalPerms;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
@@ -52,7 +53,7 @@ public class HookManager {
     }
 
     private static AbstractHook make(Class<? extends AbstractHook> clazz, Plugin plugin) throws Exception {
-        Constructor constructor = clazz.getDeclaredConstructor(Plugin.class);
+        Constructor constructor = clazz.getDeclaredConstructor(ConditionalPerms.class);
         constructor.setAccessible(true);
         return (AbstractHook) constructor.newInstance(plugin);
     }

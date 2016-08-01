@@ -14,8 +14,7 @@ public class InRegion extends AbstractCondition {
 
     @Override
     public boolean shouldApply(Player player, String parameter) {
-        return getPlugin().getHookManager().isHooked(WorldGuardHook.class) &&
-                getPlugin().getHookManager().get(WorldGuardHook.class).getRegions(player).contains(parameter.toLowerCase());
+        return getPlugin().getHookManager().get(WorldGuardHook.class).getRegions(player).contains(parameter.toLowerCase());
     }
 
     @EventHandler

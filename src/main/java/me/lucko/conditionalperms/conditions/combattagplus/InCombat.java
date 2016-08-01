@@ -14,8 +14,7 @@ public class InCombat extends AbstractCondition {
 
     @Override
     public boolean shouldApply(Player player, String parameter) {
-        return getPlugin().getHookManager().isHooked(CombatTagPlusHook.class) &&
-                getPlugin().getHookManager().get(CombatTagPlusHook.class).isTagged(player);
+        return getPlugin().getHookManager().get(CombatTagPlusHook.class).isTagged(player);
     }
 
     @EventHandler

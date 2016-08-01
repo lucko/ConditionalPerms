@@ -7,7 +7,6 @@ import me.lucko.conditionalperms.hooks.AbstractHook;
 import net.minelink.ctplus.CombatTagPlus;
 import net.minelink.ctplus.TagManager;
 import net.minelink.ctplus.event.PlayerCombatTagEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -49,7 +48,8 @@ public class CombatTagPlusHook extends AbstractHook {
         }
 
         // Pass on CombatTagPlus events if the hook is enabled.
-        Bukkit.getPluginManager().callEvent(new PlayerEnterCombatEvent(e.getPlayer(), e.getVictim(), e.getAttacker()));
+        getPlugin().getServer().getPluginManager()
+                .callEvent(new PlayerEnterCombatEvent(e.getPlayer(), e.getVictim(), e.getAttacker()));
     }
 
     @EventHandler
@@ -68,7 +68,7 @@ public class CombatTagPlusHook extends AbstractHook {
                     continue;
                 }
 
-                Player player = Bukkit.getPlayer(u);
+                Player player = getPlugin().getServer().getPlayer(u);
                 if (u == null) continue;
 
                 if (!isTagged(player)) {
@@ -78,7 +78,7 @@ public class CombatTagPlusHook extends AbstractHook {
 
             for (Player p : untag) {
                 taggedPlayers.remove(p.getUniqueId());
-                Bukkit.getPluginManager().callEvent(new PlayerLeaveCombatEvent(p));
+                getPlugin().getServer().getPluginManager().callEvent(new PlayerLeaveCombatEvent(p));
             }
         }
     }

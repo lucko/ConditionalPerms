@@ -6,7 +6,6 @@ import com.plotsquared.bukkit.events.PlayerEnterPlotEvent;
 import com.plotsquared.bukkit.events.PlayerLeavePlotEvent;
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -16,13 +15,13 @@ public class PlotSquaredHook extends AbstractHook {
     }
 
     public boolean isInPlot(Player player) {
-        PlotPlayer pp = PlotPlayer.wrap(player);
+        final PlotPlayer pp = PlotPlayer.wrap(player);
         final Plot plot = pp.getCurrentPlot();
         return plot != null;
     }
 
     public boolean isInOwnPlot(Player player) {
-        PlotPlayer pp = PlotPlayer.wrap(player);
+        final PlotPlayer pp = PlotPlayer.wrap(player);
         final Plot plot = pp.getCurrentPlot();
         return plot != null && plot.isOwner(pp.getUUID());
     }
@@ -36,7 +35,8 @@ public class PlotSquaredHook extends AbstractHook {
             return;
         }
 
-        Bukkit.getPluginManager().callEvent(new me.lucko.conditionalperms.events.PlayerLeavePlotEvent(e.getPlayer()));
+        getPlugin().getServer().getPluginManager()
+                .callEvent(new me.lucko.conditionalperms.events.PlayerLeavePlotEvent(e.getPlayer()));
     }
 
     @EventHandler
@@ -45,6 +45,7 @@ public class PlotSquaredHook extends AbstractHook {
             return;
         }
 
-        Bukkit.getPluginManager().callEvent(new me.lucko.conditionalperms.events.PlayerEnterPlotEvent(e.getPlayer()));
+        getPlugin().getServer().getPluginManager()
+                .callEvent(new me.lucko.conditionalperms.events.PlayerEnterPlotEvent(e.getPlayer()));
     }
 }

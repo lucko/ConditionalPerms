@@ -38,7 +38,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
     @Getter
     private final HookManager hookManager = new HookManager(this);
 
-    private void debug(String s) {
+    public void debug(String s) {
         if (debug) getLogger().info("[DEBUG] " + s);
     }
 
@@ -161,12 +161,9 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                 }
 
                 final AbstractCondition c = condition.getCondition();
-                if (c.isHookNeeded()) {
-                    if (!hookManager.isHooked(c.getNeededHook())) {
-                        debug("Condition " + condition.name() + " requires hook " + c.getNeededHook().getSimpleName() + " to function.");
-                    }
-
-                    neededHooks.get(player.getUniqueId()).add(c.getNeededHook());
+                if (c.isHookNeeded() && !hookManager.isHooked(c.getNeededHook())) {
+                    debug("Aborting, condition " + condition.name() + " requires hook " + c.getNeededHook().getSimpleName() + " to function.");
+                    continue;
                 }
 
                 if (c.isParameterNeeded() && parameter == null) {
@@ -183,6 +180,10 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                 final String toApply = StringUtils.join(parts.subList(2, parts.size()), ".");
                 attachment.setPermission(toApply, true);
                 debug("Applying permission " + pa.getPermission() + " --> " + toApply + " for player " + player.getName() + ".");
+
+                if (c.isHookNeeded()) {
+                    neededHooks.get(player.getUniqueId()).add(c.getNeededHook());
+                }
 
                 work = true;
                 applied.add(pa.getPermission());
@@ -211,7 +212,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                     sendMessage(sender, "&7Player '" + args[1] + "' is not online.");
                 } else {
                     refreshPlayer(p);
-                    sendMessage(sender, "&7Player " + p.getName() + " has their permissions refreshed.");
+                    sendMessage(sender, "&7Player &b" + p.getName() + " &7had their permissions refreshed.");
                 }
             } else {
                 for (Player p : getServer().getOnlinePlayers()) {
@@ -224,7 +225,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
 
         if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("conditionalperms.debug")) {
             debug = !debug;
-            sendMessage(sender, "&7Set debug to " + debug + ".");
+            sendMessage(sender, "&7Set debug to &b" + debug + "&7.");
             return true;
         }
 

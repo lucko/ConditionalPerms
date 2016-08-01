@@ -8,6 +8,7 @@ import me.lucko.conditionalperms.conditions.bukkit.InWorld;
 import me.lucko.conditionalperms.conditions.bukkit.IsFlying;
 import me.lucko.conditionalperms.conditions.combattagplus.InCombat;
 import me.lucko.conditionalperms.conditions.factions.InFactionsLand;
+import me.lucko.conditionalperms.conditions.placeholderapi.IsPlaceholder;
 import me.lucko.conditionalperms.conditions.plotsquared.InOwnPlot;
 import me.lucko.conditionalperms.conditions.plotsquared.InPlot;
 import me.lucko.conditionalperms.conditions.worldguard.InRegion;
@@ -20,6 +21,8 @@ enum Condition {
     IN_WORLD(new InWorld()),
     IN_GAMEMODE(new InGamemode()),
     IS_FLYING(new IsFlying()),
+
+    IS_PLACEHOLDER(new IsPlaceholder()),
 
     IN_REGION(new InRegion()),
 

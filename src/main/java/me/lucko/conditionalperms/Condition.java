@@ -11,8 +11,10 @@ import me.lucko.conditionalperms.conditions.factions.InFactionsLand;
 import me.lucko.conditionalperms.conditions.placeholderapi.IsPlaceholder;
 import me.lucko.conditionalperms.conditions.plotsquared.InOwnPlot;
 import me.lucko.conditionalperms.conditions.plotsquared.InPlot;
+import me.lucko.conditionalperms.conditions.towny.InTownyRegion;
 import me.lucko.conditionalperms.conditions.worldguard.InRegion;
 import me.lucko.conditionalperms.utils.FactionsRegion;
+import me.lucko.conditionalperms.utils.TownyRegion;
 
 @Getter
 @AllArgsConstructor
@@ -38,7 +40,23 @@ enum Condition {
     FACS_LAND_NEUTRAL(new InFactionsLand(FactionsRegion.NEUTRAL)),
     FACS_LAND_ENEMY(new InFactionsLand(FactionsRegion.ENEMY)),
     FACS_LAND_TRUCE(new InFactionsLand(FactionsRegion.TRUCE)),
-    FACS_LAND_OWN(new InFactionsLand(FactionsRegion.OWN));
+    FACS_LAND_OWN(new InFactionsLand(FactionsRegion.OWN)),
+
+    TOWNY_LAND_ADMIN(new InTownyRegion(TownyRegion.ADMIN)),
+    TOWNY_LAND_ENEMY(new InTownyRegion(TownyRegion.ENEMY)),
+    TOWNY_LAND_LOCKED(new InTownyRegion(TownyRegion.LOCKED)),
+    TOWNY_LAND_NOT_REGISTERED(new InTownyRegion(TownyRegion.NOT_REGISTERED)),
+    TOWNY_LAND_OFF_WORLD(new InTownyRegion(TownyRegion.OFF_WORLD)),
+    TOWNY_LAND_OUTSIDER(new InTownyRegion(TownyRegion.OUTSIDER)),
+    TOWNY_LAND_PLOT_ALLY(new InTownyRegion(TownyRegion.PLOT_ALLY)),
+    TOWNY_LAND_PLOT_FRIEND(new InTownyRegion(TownyRegion.PLOT_FRIEND)),
+    TOWNY_LAND_PLOT_OWNER(new InTownyRegion(TownyRegion.PLOT_OWNER)),
+    TOWNY_LAND_TOWN_ALLY(new InTownyRegion(TownyRegion.TOWN_ALLY)),
+    TOWNY_LAND_TOWN_OWNER(new InTownyRegion(TownyRegion.TOWN_OWNER)),
+    TOWNY_LAND_TOWN_RESIDENT(new InTownyRegion(TownyRegion.TOWN_RESIDENT)),
+    TOWNY_LAND_UNCLAIMED(new InTownyRegion(TownyRegion.UNCLAIMED)),
+    TOWNY_LAND_WARZONE(new InTownyRegion(TownyRegion.WARZONE));
+
 
     private AbstractCondition condition;
 

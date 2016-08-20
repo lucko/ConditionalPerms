@@ -17,26 +17,41 @@ For example, granting access to `bans.banhammer` only when a user is in Creative
 ### Available conditions:
 The general usage is `cperms.condition=parameter.your.node`, or if a parameter is not required, `cperms.condition.your.node`. You can negate permissions by adding a `!` to the start of the condition.
 
-| Condition           | Description                     | Parameters       |
-|---------------------|---------------------------------|------------------|
-| in_gamemode         | If in a certain gamemode        | the gamemode     |
-| in_world            | If in a certain world           | the world        |
-| is_placeholder      | If placeholder returns true     | the placeholder  |
-| is_flying           | If flying                       | n/a              |
-| in_region           | If in a WorldGuard region       | the region       |
-| in_combat           | If combat tagged                | n/a              |
-| in_plot             | If in a PlotSquared plot        | n/a              |
-| in_own_plot         | If in own PlotSquared plot      | n/a              |
-| facs_land_none      | If in a Factions winderness     | n/a              |
-| facs_land_warzone   | If in a Factions warzone        | n/a              |
-| facs_land_safezone  | If in a Factions safezone       | n/a              |
-| facs_land_ally      | If in an ally factions land     | n/a              |
-| facs_land_neutral   | If in a neutral factions land   | n/a              |
-| facs_land_enemy     | If in an enemy factions land    | n/a              |
-| facs_land_truce     | If in a truce factions land     | n/a              |
-| facs_land_own       | If in own factions land         | n/a              |
+| Condition                  | Description                     | Parameters       |
+|----------------------------|---------------------------------|------------------|
+| in_gamemode                | If in a certain gamemode        | the gamemode     |
+| in_world                   | If in a certain world           | the world        |
+| is_placeholder             | If placeholder returns true     | the placeholder  |
+| is_flying                  | If flying                       | n/a              |
+| in_region                  | If in a WorldGuard region       | the region       |
+| in_combat                  | If combat tagged                | n/a              |
+| in_plot                    | If in a PlotSquared plot        | n/a              |
+| in_own_plot                | If in own PlotSquared plot      | n/a              |
+| facs_land_none             | If in a Factions wilderness     | n/a              |
+| facs_land_warzone          | If in a Factions warzone        | n/a              |
+| facs_land_safezone         | If in a Factions safezone       | n/a              |
+| facs_land_ally             | If in an ally factions land     | n/a              |
+| facs_land_neutral          | If in a neutral factions land   | n/a              |
+| facs_land_enemy            | If in an enemy factions land    | n/a              |
+| facs_land_truce            | If in a truce factions land     | n/a              |
+| facs_land_own              | If in own factions land         | n/a              |
+| towny_land_admin           | If in specified towny area      | n/a              |
+| towny_land_enemy           | If in specified towny area      | n/a              |
+| towny_land_locked          | If in specified towny area      | n/a              |
+| towny_land_not_registered  | If in specified towny area      | n/a              |
+| towny_land_off_world       | If in specified towny area      | n/a              |
+| towny_land_outsider        | If in specified towny area      | n/a              |
+| towny_land_plot_ally       | If in specified towny area      | n/a              |
+| towny_land_plot_friend     | If in specified towny area      | n/a              |
+| towny_land_plot_owner      | If in specified towny area      | n/a              |
+| towny_land_town_ally       | If in specified towny area      | n/a              |
+| towny_land_town_owner      | If in specified towny area      | n/a              |
+| towny_land_town_resident   | If in specified towny area      | n/a              |
+| towny_land_unclaimed       | If in specified towny area      | n/a              |
+| towny_land_warzone         | If in specified towny area      | n/a              |
 
-Supports (pretty much) any version of Factions, the recent WorldGuard versions, CombatTagPlus, PlotSquared & PlaceholderAPI.
+
+Supports (pretty much) any version of Factions, the recent WorldGuard versions, CombatTagPlus, PlotSquared, PlaceholderAPI and Towny.
 
 More conditions coming soon. Feel free to PR new ones.
 

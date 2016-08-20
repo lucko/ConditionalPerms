@@ -12,7 +12,8 @@ enum Hook {
     FACTIONS("Factions", FactionsHook.class),
     PLOT_SQUARED("PlotSquared", PlotSquaredHook.class),
     WORLD_GUARD("WorldGuard", WorldGuardHook.class),
-    PLACEHOLDER_API("PlaceholderAPI", PlaceholderAPIHook.class);
+    PLACEHOLDER_API("PlaceholderAPI", PlaceholderAPIHook.class),
+    TOWNY("Towny", TownyHook.class);
 
     private final String pluginName;
     private final Class<? extends AbstractHook> clazz;

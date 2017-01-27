@@ -1,9 +1,33 @@
+/*
+ * Copyright (c) 2017 Lucko (Luck) <luck@lucko.me>
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE.
+ */
+
 package me.lucko.conditionalperms;
 
 import lombok.Getter;
+
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.hooks.HookManager;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,14 +43,20 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class ConditionalPerms extends JavaPlugin implements Listener {
     private static final Pattern DOT_PATTERN = Pattern.compile("\\.");
     private static final Pattern EQUALS_PATTERN = Pattern.compile("=");
 
-    private boolean debug = false;
     private final Map<UUID, PermissionAttachment> attachments = new HashMap<>();
 
     /**
@@ -37,6 +67,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
 
     @Getter
     private final HookManager hookManager = new HookManager(this);
+    private boolean debug = false;
 
     public void debug(String s) {
         if (debug) getLogger().info("[DEBUG] " + s);
@@ -194,13 +225,13 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sendMessage(sender, "Running version &bv" + getDescription().getVersion() + "&7.");
+            msg(sender, "Running version &bv" + getDescription().getVersion() + "&7.");
             if (sender.hasPermission("conditionalperms.reload")) {
-                sendMessage(sender, "--> &b/cperms reload&7 to refresh all online users.");
-                sendMessage(sender, "--> &b/cperms reload <username>&7 to refresh a specific user.");
+                msg(sender, "--> &b/cperms reload&7 to refresh all online users.");
+                msg(sender, "--> &b/cperms reload <username>&7 to refresh a specific user.");
             }
             if (sender.hasPermission("conditionalperms.debug")) {
-                sendMessage(sender, "--> &b/cperms debug&7 to toggle debug mode.");
+                msg(sender, "--> &b/cperms debug&7 to toggle debug mode.");
             }
             return true;
         }
@@ -209,31 +240,31 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
             if (args.length > 1) {
                 final Player p = getServer().getPlayer(args[1]);
                 if (p == null) {
-                    sendMessage(sender, "&7Player '" + args[1] + "' is not online.");
+                    msg(sender, "&7Player '" + args[1] + "' is not online.");
                 } else {
                     refreshPlayer(p);
-                    sendMessage(sender, "&7Player &b" + p.getName() + " &7had their permissions refreshed.");
+                    msg(sender, "&7Player &b" + p.getName() + " &7had their permissions refreshed.");
                 }
             } else {
                 for (Player p : getServer().getOnlinePlayers()) {
                     refreshPlayer(p);
                 }
-                sendMessage(sender, "&7All online users were refreshed.");
+                msg(sender, "&7All online users were refreshed.");
             }
             return true;
         }
 
         if (args[0].equalsIgnoreCase("debug") && sender.hasPermission("conditionalperms.debug")) {
             debug = !debug;
-            sendMessage(sender, "&7Set debug to &b" + debug + "&7.");
+            msg(sender, "&7Set debug to &b" + debug + "&7.");
             return true;
         }
 
-        sendMessage(sender, "&7Unknown sub command.");
+        msg(sender, "&7Unknown sub command.");
         return true;
     }
 
-    private static void sendMessage(CommandSender sender, String message) {
+    private static void msg(CommandSender sender, String message) {
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8&l[&fConditionalPerms&8&l] &7" + message));
     }
 }

@@ -73,33 +73,6 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
-        </repository>
-        <repository>
-            <id>luck-repo</id>
-            <url>https://repo.lucko.me/</url>
-        </repository>
-        <repository>
-            <id>minelink-repo</id>
-            <url>http://repo.minelink.net/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>mvdw-repo</id>
-            <url>http://repo.mvdw-software.be/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>extendedclip-repo</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <!--Spigot API-->
         <dependency>
@@ -139,7 +112,7 @@
         <dependency>
             <groupId>com.intellectualcrafters</groupId>
             <artifactId>PlotSquared</artifactId>
-            <version>3.2.7</version>
+            <version>3.5.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <!--PlaceholderAPI-->
@@ -164,5 +137,36 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>sk89q-repo</id>
+            <url>http://maven.sk89q.com/repo/</url>
+        </repository>
+        <repository>
+            <id>luck-repo</id>
+            <url>https://repo.lucko.me/</url>
+        </repository>
+        <repository>
+            <id>luck-ci-repo</id>
+            <url>https://ci.lucko.me/plugin/repository/everything/</url>
+        </repository>
+        <repository>
+            <id>minelink-repo</id>
+            <url>http://repo.minelink.net/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>mvdw-repo</id>
+            <url>http://repo.mvdw-software.be/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>extendedclip-repo</id>
+            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+    </repositories>
 
 </project>

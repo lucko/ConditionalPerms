@@ -60,7 +60,12 @@ public class WorldGuardHook extends AbstractHook {
     }
 
     public ImmutableSet<String> getRegions(Player player) {
-        return ImmutableSet.copyOf(regions.get(player.getUniqueId()));
+        Set<String> ret = regions.get(player.getUniqueId());
+        if (ret == null || ret.isEmpty()) {
+            return ImmutableSet.of();
+        } else {
+            return ImmutableSet.copyOf(ret);
+        }
     }
 
     private Set<String> queryRegions(Location location) {

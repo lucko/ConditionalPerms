@@ -28,7 +28,6 @@ import org.bukkit.event.player.PlayerEvent;
 
 public class PlayerEnterPlotEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
-
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }

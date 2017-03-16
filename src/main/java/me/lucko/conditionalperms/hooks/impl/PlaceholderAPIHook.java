@@ -26,13 +26,32 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
+import me.lucko.helper.Scheduler;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.entity.Player;
 
-public class PlaceholderAPIHook extends AbstractHook {
+import java.util.function.Consumer;
+
+public class PlaceholderAPIHook extends AbstractHook implements Runnable {
     public PlaceholderAPIHook(ConditionalPerms plugin) {
         super(plugin);
-        getPlugin().getServer().getScheduler().runTaskTimer(getPlugin(), new UpdateTask(), 0L, 600L);
+    }
+
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Scheduler.runTaskRepeatingSync(this, 1L, 400L).register(consumer);
+    }
+
+    @Override
+    public void run() {
+        for (Player p : getPlugin().getServer().getOnlinePlayers()) {
+            if (!shouldCheck(PlaceholderAPIHook.class, p.getUniqueId())) {
+                continue;
+            }
+
+            getPlugin().refreshPlayer(p);
+        }
     }
 
     public boolean getResult(String placeholder, Player player) {
@@ -57,20 +76,5 @@ public class PlaceholderAPIHook extends AbstractHook {
         }
 
         return Boolean.parseBoolean(result);
-    }
-
-    // Not ideal, but there is obviously no events for placeholder output changing
-    private class UpdateTask implements Runnable {
-
-        @Override
-        public void run() {
-            for (Player p : getPlugin().getServer().getOnlinePlayers()) {
-                if (!shouldCheck(PlaceholderAPIHook.class, p.getUniqueId())) {
-                    continue;
-                }
-
-                getPlugin().refreshPlayer(p);
-            }
-        }
     }
 }

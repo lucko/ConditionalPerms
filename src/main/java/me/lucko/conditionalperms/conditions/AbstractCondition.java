@@ -28,17 +28,20 @@ import lombok.RequiredArgsConstructor;
 
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
+import me.lucko.helper.utils.CompositeTerminable;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
 @RequiredArgsConstructor
-public abstract class AbstractCondition implements Listener {
+public abstract class AbstractCondition implements CompositeTerminable {
+
+    @Getter(AccessLevel.PROTECTED)
+    private ConditionalPerms plugin = null;
 
     @Getter
     private final boolean parameterNeeded;
-    @Getter(AccessLevel.PROTECTED)
-    private ConditionalPerms plugin = null;
+
+    @Getter
     private Class<? extends AbstractHook> neededHook = null;
 
     public AbstractCondition(boolean parameterNeeded, Class<? extends AbstractHook> neededHook) {
@@ -48,17 +51,13 @@ public abstract class AbstractCondition implements Listener {
 
     public void init(ConditionalPerms plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.bindTerminable(this);
     }
 
     public abstract boolean shouldApply(Player player, String parameter);
 
     public boolean isHookNeeded() {
         return neededHook != null;
-    }
-
-    public Class<? extends AbstractHook> getNeededHook() {
-        return neededHook;
     }
 
 }

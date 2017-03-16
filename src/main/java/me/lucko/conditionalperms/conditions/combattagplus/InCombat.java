@@ -26,9 +26,12 @@ import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.events.PlayerEnterCombatEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveCombatEvent;
 import me.lucko.conditionalperms.hooks.impl.CombatTagPlusHook;
+import me.lucko.helper.Events;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
+
+import java.util.function.Consumer;
 
 public class InCombat extends AbstractCondition {
     public InCombat() {
@@ -40,18 +43,21 @@ public class InCombat extends AbstractCondition {
         return getPlugin().getHookManager().get(CombatTagPlusHook.class).isTagged(player);
     }
 
-    @EventHandler
-    public void onTag(PlayerEnterCombatEvent e) {
-        if (e.getVictim() != null) {
-            getPlugin().refreshPlayer(e.getVictim(), 1L);
-        }
-        if (e.getAttacker() != null) {
-            getPlugin().refreshPlayer(e.getAttacker(), 1L);
-        }
-    }
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Events.subscribe(PlayerEnterCombatEvent.class)
+                .handler(e -> {
+                    if (e.getVictim() != null) {
+                        getPlugin().refreshPlayer(e.getVictim(), 1L);
+                    }
+                    if (e.getAttacker() != null) {
+                        getPlugin().refreshPlayer(e.getAttacker(), 1L);
+                    }
+                })
+                .register(consumer);
 
-    @EventHandler
-    public void onUnTag(PlayerLeaveCombatEvent e) {
-        getPlugin().refreshPlayer(e.getPlayer(), 1L);
+        Events.subscribe(PlayerLeaveCombatEvent.class)
+                .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
+                .register(consumer);
     }
 }

@@ -32,12 +32,13 @@ import org.bukkit.event.player.PlayerEvent;
 
 public class PlayerFactionsRegionChangeEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
-
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+
     @Getter
     private final FactionsRegion from;
+
     @Getter
     private final FactionsRegion to;
 

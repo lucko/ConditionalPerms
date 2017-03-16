@@ -30,10 +30,10 @@ import org.bukkit.event.player.PlayerEvent;
 
 public class PlayerLeaveRegionEvent extends PlayerEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
-
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+
     @Getter
     private final String region;
 

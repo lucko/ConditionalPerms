@@ -23,11 +23,14 @@
 package me.lucko.conditionalperms.conditions.bukkit;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
+import me.lucko.helper.Events;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
+
+import java.util.function.Consumer;
 
 public class InGamemode extends AbstractCondition {
     public InGamemode() {
@@ -38,14 +41,16 @@ public class InGamemode extends AbstractCondition {
     public boolean shouldApply(Player player, String parameter) {
         try {
             GameMode g = GameMode.valueOf(parameter.toUpperCase());
-            return player.getGameMode().equals(g);
+            return player.getGameMode() == g;
         } catch (IllegalArgumentException e) {
             return false;
         }
     }
 
-    @EventHandler
-    public void onGameModeChange(PlayerGameModeChangeEvent e) {
-        getPlugin().refreshPlayer(e.getPlayer(), 1L);
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Events.subscribe(PlayerGameModeChangeEvent.class)
+                .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
+                .register(consumer);
     }
 }

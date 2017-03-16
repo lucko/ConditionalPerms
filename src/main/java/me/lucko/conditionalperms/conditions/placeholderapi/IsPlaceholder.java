@@ -24,8 +24,11 @@ package me.lucko.conditionalperms.conditions.placeholderapi;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.hooks.impl.PlaceholderAPIHook;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.entity.Player;
+
+import java.util.function.Consumer;
 
 public class IsPlaceholder extends AbstractCondition {
     public IsPlaceholder() {
@@ -44,5 +47,10 @@ public class IsPlaceholder extends AbstractCondition {
             getPlugin().debug("Could not parse a result from placeholder " + parameter + ", with error '" + e.getMessage() + "'.");
             return false;
         }
+    }
+
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        // do nothing
     }
 }

@@ -23,39 +23,42 @@
 package me.lucko.conditionalperms;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.hooks.HookManager;
+import me.lucko.helper.Events;
+import me.lucko.helper.Scheduler;
+import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import me.lucko.helper.utils.Color;
+import me.lucko.helper.utils.CompositeTerminable;
+import me.lucko.helper.utils.Terminable;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Pattern;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-public class ConditionalPerms extends JavaPlugin implements Listener {
-    private static final Pattern DOT_PATTERN = Pattern.compile("\\.");
-    private static final Pattern EQUALS_PATTERN = Pattern.compile("=");
+public class ConditionalPerms extends ExtendedJavaPlugin implements CompositeTerminable {
+    private static final Splitter DOT_SPLIT = Splitter.on('.').omitEmptyStrings().trimResults();
+    private static final Splitter EQUALS_SPLIT = Splitter.on('=').omitEmptyStrings().trimResults().limit(2);
 
     private final Map<UUID, PermissionAttachment> attachments = new HashMap<>();
 
@@ -63,10 +66,13 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
      * Used to stop any listeners in hooks firing for players who do not have any conditional permissions assigned.
      */
     @Getter
-    private final Map<UUID, Set<Class<? extends AbstractHook>>> neededHooks = new HashMap<>();
+    private final Multimap<UUID, Class<? extends AbstractHook>> neededHooks = HashMultimap.create();
 
     @Getter
-    private final HookManager hookManager = new HookManager(this);
+    private HookManager hookManager;
+
+    @Getter
+    @Setter
     private boolean debug = false;
 
     public void debug(String s) {
@@ -75,49 +81,36 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(this, this);
+        bindTerminable(this);
 
         for (Condition condition : Condition.values()) {
             condition.getCondition().init(this);
         }
 
+        hookManager = new HookManager(this);
         hookManager.init();
     }
 
     @Override
-    public void onDisable() {
-        hookManager.shutdown();
-    }
+    public void bind(Consumer<Terminable> consumer) {
+        Events.subscribe(PlayerLoginEvent.class)
+                .handler(e -> attachments.put(e.getPlayer().getUniqueId(), e.getPlayer().addAttachment(this)))
+                .register(consumer);
 
-    @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent e) {
-        final Player p = e.getPlayer();
-        attachments.put(p.getUniqueId(), p.addAttachment(this));
-        neededHooks.put(p.getUniqueId(), new HashSet<Class<? extends AbstractHook>>());
-        refreshPlayer(p);
-    }
+        Events.subscribe(PlayerJoinEvent.class)
+                .handler(e -> {
+                   refreshPlayer(e.getPlayer());
+                   refreshPlayer(e.getPlayer(), 20L);
+                })
+                .register(consumer);
 
-    @EventHandler
-    public void onPlayerJoin(final PlayerJoinEvent e) {
-        refreshPlayer(e.getPlayer());
-        refreshPlayer(e.getPlayer(), 20L);
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        final Player p = e.getPlayer();
-        p.removeAttachment(attachments.get(p.getUniqueId()));
-        attachments.remove(p.getUniqueId());
-        neededHooks.remove(p.getUniqueId());
+        Events.subscribe(PlayerQuitEvent.class)
+                .handler(e -> e.getPlayer().removeAttachment(attachments.remove(e.getPlayer().getUniqueId())))
+                .register(consumer);
     }
 
     public void refreshPlayer(final Player player, long delay) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                refreshPlayer(player);
-            }
-        }.runTaskLater(this, delay);
+        Scheduler.runLaterSync(() -> refreshPlayer(player), delay);
     }
 
     public void refreshPlayer(Player player) {
@@ -132,7 +125,7 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
         for (String p : attachment.getPermissions().keySet()) {
             attachment.unsetPermission(p);
         }
-        neededHooks.get(player.getUniqueId()).clear();
+        neededHooks.removeAll(player.getUniqueId());
 
         // process recursively so you can chain permissions together
         boolean work = true;
@@ -142,20 +135,16 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
 
             for (PermissionAttachmentInfo pa : player.getEffectivePermissions()) {
                 // Don't apply negative permissions
-                if (!pa.getValue()) {
-                    continue;
-                }
+                if (!pa.getValue()) continue;
 
-                if (!pa.getPermission().startsWith("cperms.")) {
-                    continue;
-                }
+                // check we're handling a cperms node
+                if (!pa.getPermission().startsWith("cperms.")) continue;
 
-                if (applied.contains(pa.getPermission())) {
-                    continue;
-                }
+                // don't re-apply permissions
+                if (applied.contains(pa.getPermission())) continue;
 
                 debug("Processing conditional permission: " + pa.getPermission());
-                final List<String> parts = Arrays.asList(DOT_PATTERN.split(pa.getPermission()));
+                final List<String> parts = DOT_SPLIT.splitToList(pa.getPermission());
                 if (parts.size() <= 2) {
                     debug("Aborting, permission does not contain a node to apply.");
                     continue;
@@ -171,9 +160,9 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
 
                 String parameter = null;
                 if (conditionPart.contains("=")) {
-                    final String[] parameterSplit = EQUALS_PATTERN.split(conditionPart, 2);
-                    conditionPart = parameterSplit[0];
-                    parameter = parameterSplit[1];
+                    final List<String> parameterSplit = EQUALS_SPLIT.splitToList(conditionPart);
+                    conditionPart = parameterSplit.get(0);
+                    parameter = parameterSplit.get(1);
                     debug("Found parameter: " + parameter);
                 }
 
@@ -202,19 +191,20 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
                     continue;
                 }
 
+                // register that the hook is needed before checking if the condition is met. they might meet the condition at a later time.
+                if (c.isHookNeeded()) {
+                    neededHooks.put(player.getUniqueId(), c.getNeededHook());
+                }
+
                 final boolean shouldApply = c.shouldApply(player, parameter);
                 if (negated == shouldApply) {
                     debug("Player did not meet the conditions required for this permission to be applied.");
                     continue;
                 }
 
-                final String toApply = StringUtils.join(parts.subList(2, parts.size()), ".");
+                final String toApply = parts.subList(2, parts.size()).stream().collect(Collectors.joining("."));
                 attachment.setPermission(toApply, true);
                 debug("Applying permission " + pa.getPermission() + " --> " + toApply + " for player " + player.getName() + ".");
-
-                if (c.isHookNeeded()) {
-                    neededHooks.get(player.getUniqueId()).add(c.getNeededHook());
-                }
 
                 work = true;
                 applied.add(pa.getPermission());
@@ -265,6 +255,6 @@ public class ConditionalPerms extends JavaPlugin implements Listener {
     }
 
     private static void msg(CommandSender sender, String message) {
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8&l[&fConditionalPerms&8&l] &7" + message));
+        sender.sendMessage(Color.colorize("&8&l[&fConditionalPerms&8&l] &7" + message));
     }
 }

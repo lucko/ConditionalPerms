@@ -22,6 +22,7 @@
 
 package me.lucko.conditionalperms.hooks.impl;
 
+import com.google.common.collect.ImmutableSet;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.RegionQuery;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -32,11 +33,12 @@ import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.events.PlayerEnterRegionEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveRegionEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
+import me.lucko.helper.Events;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -46,6 +48,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class WorldGuardHook extends AbstractHook {
     private WorldGuardPlugin worldGuard;
@@ -53,24 +56,16 @@ public class WorldGuardHook extends AbstractHook {
 
     WorldGuardHook(ConditionalPerms plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void init() {
         worldGuard = (WorldGuardPlugin) getPlugin().getServer().getPluginManager().getPlugin("WorldGuard");
     }
 
-    public Set<String> getRegions(Player player) {
-        final Set<String> r = new HashSet<>();
-        for (String s : regions.get(player.getUniqueId())) {
-            r.add(s.toLowerCase());
-        }
-        return r;
+    public ImmutableSet<String> getRegions(Player player) {
+        return ImmutableSet.copyOf(regions.get(player.getUniqueId()));
     }
 
-    private Set<String> getRegions(Location location) {
-        final RegionContainer container = worldGuard.getRegionContainer();
-        final RegionQuery query = container.createQuery();
+    private Set<String> queryRegions(Location location) {
+        RegionContainer container = worldGuard.getRegionContainer();
+        RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(location);
 
         if (set.size() == 0) {
@@ -79,52 +74,46 @@ public class WorldGuardHook extends AbstractHook {
 
         final Set<String> regions = new HashSet<>();
         for (ProtectedRegion r : set.getRegions()) {
-            regions.add(r.getId());
+            regions.add(r.getId().toLowerCase());
         }
 
         return regions;
     }
 
-    @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent e) {
-        regions.put(e.getPlayer().getUniqueId(), new HashSet<>(getRegions(e.getPlayer().getLocation())));
-    }
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Events.subscribe(PlayerJoinEvent.class)
+                .handler(e -> regions.put(e.getPlayer().getUniqueId(), new HashSet<>(queryRegions(e.getPlayer().getLocation()))))
+                .register(consumer);
 
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        regions.remove(e.getPlayer().getUniqueId());
-    }
+        Events.subscribe(PlayerQuitEvent.class)
+                .handler(e -> regions.remove(e.getPlayer().getUniqueId()))
+                .register(consumer);
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e) {
-        if (e.getFrom().getBlockX() == e.getTo().getBlockX() &&
-                e.getFrom().getBlockY() == e.getTo().getBlockY() &&
-                e.getFrom().getBlockZ() == e.getTo().getBlockZ()) {
-            return;
-        }
+        Events.subscribe(PlayerMoveEvent.class)
+                .filter(Events.DEFAULT_FILTERS.ignoreSameBlock())
+                .filter(e -> shouldCheck(WorldGuardHook.class, e.getPlayer().getUniqueId()))
+                .handler(e -> {
+                    Set<String> previouslyIn = regions.get(e.getPlayer().getUniqueId());
+                    Set<String> now = queryRegions(e.getPlayer().getLocation());
 
-        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
-            return;
-        }
+                    for (String s : previouslyIn) {
+                        if (!now.contains(s)) {
+                            // Fire RegionLeaveEvent
+                            worldGuard.getServer().getPluginManager().callEvent(new PlayerLeaveRegionEvent(e.getPlayer(), s));
+                        }
+                    }
 
-        final Set<String> previouslyIn = regions.get(e.getPlayer().getUniqueId());
-        final Set<String> now = getRegions(e.getPlayer().getLocation());
+                    for (String s : now) {
+                        if (!previouslyIn.contains(s)) {
+                            // Fire RegionEnterEvent
+                            worldGuard.getServer().getPluginManager().callEvent(new PlayerEnterRegionEvent(e.getPlayer(), s));
+                        }
+                    }
 
-        for (String s : previouslyIn) {
-            if (!now.contains(s)) {
-                // Fire RegionLeaveEvent
-                worldGuard.getServer().getPluginManager().callEvent(new PlayerLeaveRegionEvent(e.getPlayer(), s));
-            }
-        }
-
-        for (String s : now) {
-            if (!previouslyIn.contains(s)) {
-                // Fire RegionEnterEvent
-                worldGuard.getServer().getPluginManager().callEvent(new PlayerEnterRegionEvent(e.getPlayer(), s));
-            }
-        }
-
-        previouslyIn.clear();
-        previouslyIn.addAll(now);
+                    previouslyIn.clear();
+                    previouslyIn.addAll(now);
+                })
+                .register(consumer);
     }
 }

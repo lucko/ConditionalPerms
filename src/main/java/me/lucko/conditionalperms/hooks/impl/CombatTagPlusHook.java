@@ -26,84 +26,86 @@ import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.events.PlayerEnterCombatEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveCombatEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
+import me.lucko.helper.Events;
+import me.lucko.helper.Scheduler;
+import me.lucko.helper.utils.Terminable;
 
 import net.minelink.ctplus.CombatTagPlus;
 import net.minelink.ctplus.TagManager;
 import net.minelink.ctplus.event.PlayerCombatTagEvent;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-public class CombatTagPlusHook extends AbstractHook {
+public class CombatTagPlusHook extends AbstractHook implements Runnable {
     private final Set<UUID> taggedPlayers = new HashSet<>();
     private TagManager manager;
 
     CombatTagPlusHook(ConditionalPerms plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void init() {
         CombatTagPlus combatTagPlus = (CombatTagPlus) getPlugin().getServer().getPluginManager().getPlugin("CombatTagPlus");
         manager = combatTagPlus.getTagManager();
-        getPlugin().getServer().getScheduler().runTaskTimer(getPlugin(), new CheckTagTask(), 0L, 20L);
     }
 
     public boolean isTagged(Player player) {
         return manager.isTagged(player.getUniqueId());
     }
 
-    @EventHandler
-    public void onPlayerCombatTag(PlayerCombatTagEvent e) {
-        if (e.getVictim() != null) {
-            if (shouldCheck(getClass(), e.getVictim().getUniqueId())) {
-                taggedPlayers.add(e.getVictim().getUniqueId());
-            }
-        }
-        if (e.getAttacker() != null) {
-            if (shouldCheck(getClass(), e.getVictim().getUniqueId())) {
-                taggedPlayers.add(e.getVictim().getUniqueId());
-            }
-        }
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Scheduler.runTaskRepeatingSync(this, 1L, 20L)
+                .register(consumer);
 
-        // Pass on CombatTagPlus events if the hook is enabled.
-        getPlugin().getServer().getPluginManager()
-                .callEvent(new PlayerEnterCombatEvent(e.getPlayer(), e.getVictim(), e.getAttacker()));
+        Events.subscribe(PlayerQuitEvent.class)
+                .handler(e -> taggedPlayers.remove(e.getPlayer().getUniqueId()))
+                .register(consumer);
+
+        Events.subscribe(PlayerCombatTagEvent.class)
+                .handler(e -> {
+                    if (e.getVictim() != null) {
+                        if (shouldCheck(CombatTagPlusHook.class, e.getVictim().getUniqueId())) {
+                            taggedPlayers.add(e.getVictim().getUniqueId());
+                        }
+                    }
+                    if (e.getAttacker() != null) {
+                        if (shouldCheck(CombatTagPlusHook.class, e.getVictim().getUniqueId())) {
+                            taggedPlayers.add(e.getVictim().getUniqueId());
+                        }
+                    }
+
+                    // Pass on CombatTagPlus events if the hook is enabled.
+                    getPlugin().getServer().getPluginManager().callEvent(new PlayerEnterCombatEvent(e.getPlayer(), e.getVictim(), e.getAttacker()));
+                })
+                .register(consumer);
     }
 
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        taggedPlayers.remove(e.getPlayer().getUniqueId());
-    }
+    @Override
+    public void run() {
+        // Ambient tag checking task
+        // Not ideal, but there is no event for players leaving combat
 
-    // Not ideal, but there is no event for players leaving combat
-    private class CheckTagTask implements Runnable {
-
-        @Override
-        public void run() {
-            final Set<Player> untag = new HashSet<>();
-            for (UUID u : taggedPlayers) {
-                if (!shouldCheck(CombatTagPlusHook.class, u)) {
-                    continue;
-                }
-
-                Player player = getPlugin().getServer().getPlayer(u);
-                if (u == null) continue;
-
-                if (!isTagged(player)) {
-                    untag.add(player);
-                }
+        final Set<Player> untag = new HashSet<>();
+        for (UUID u : taggedPlayers) {
+            if (!shouldCheck(CombatTagPlusHook.class, u)) {
+                continue;
             }
 
-            for (Player p : untag) {
-                taggedPlayers.remove(p.getUniqueId());
-                getPlugin().getServer().getPluginManager().callEvent(new PlayerLeaveCombatEvent(p));
+            Player player = getPlugin().getServer().getPlayer(u);
+            if (u == null) continue;
+
+            if (!isTagged(player)) {
+                untag.add(player);
             }
+        }
+
+        for (Player p : untag) {
+            taggedPlayers.remove(p.getUniqueId());
+            getPlugin().getServer().getPluginManager().callEvent(new PlayerLeaveCombatEvent(p));
         }
     }
 }

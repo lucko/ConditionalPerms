@@ -29,59 +29,53 @@ import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.events.PlayerTownyRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.utils.TownyRegion;
+import me.lucko.helper.Events;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class TownyHook extends AbstractHook {
-    private Towny towny = null;
+
+    private final Towny towny;
     private Map<UUID, TownyRegion> regions = new HashMap<>();
 
     public TownyHook(ConditionalPerms plugin) {
         super(plugin);
-    }
-
-    @Override
-    public void init() {
         towny = (Towny) getPlugin().getServer().getPluginManager().getPlugin("Towny");
     }
 
-    @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent e) {
-        regions.put(e.getPlayer().getUniqueId(), getRegion(e.getPlayer()));
-    }
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Events.subscribe(PlayerJoinEvent.class)
+                .handler(e -> regions.put(e.getPlayer().getUniqueId(), getRegion(e.getPlayer())))
+                .register(consumer);
 
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        regions.remove(e.getPlayer().getUniqueId());
-    }
+        Events.subscribe(PlayerQuitEvent.class)
+                .handler(e -> regions.remove(e.getPlayer().getUniqueId()))
+                .register(consumer);
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e) {
-        if (e.getFrom().getX() == e.getTo().getX() && e.getFrom().getZ() == e.getTo().getZ()) {
-            return;
-        }
+        Events.subscribe(PlayerMoveEvent.class)
+                .filter(Events.DEFAULT_FILTERS.ignoreSameBlockAndY())
+                .filter(e -> shouldCheck(TownyHook.class, e.getPlayer().getUniqueId()))
+                .handler(e -> {
+                    TownyRegion from = regions.get(e.getPlayer().getUniqueId());
+                    TownyRegion to = getRegion(e.getPlayer());
 
-        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
-            return;
-        }
+                    if (from == null || to == null || from.equals(to)) {
+                        return;
+                    }
 
-        final TownyRegion from = regions.get(e.getPlayer().getUniqueId());
-        final TownyRegion to = getRegion(e.getPlayer());
-
-        if (from == null || to == null || from.equals(to)) {
-            return;
-        }
-
-        getPlugin().getServer().getPluginManager().callEvent(new PlayerTownyRegionChangeEvent(e.getPlayer(), from, to));
-        regions.put(e.getPlayer().getUniqueId(), to);
+                    getPlugin().getServer().getPluginManager().callEvent(new PlayerTownyRegionChangeEvent(e.getPlayer(), from, to));
+                    regions.put(e.getPlayer().getUniqueId(), to);
+                });
     }
 
     public TownyRegion getRegion(Player player) {

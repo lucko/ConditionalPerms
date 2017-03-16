@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 
 import me.lucko.conditionalperms.ConditionalPerms;
 
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import java.lang.reflect.Constructor;
@@ -35,19 +34,18 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class HookManager {
-    private final Plugin plugin;
+    private final ConditionalPerms plugin;
     private final Map<Class<? extends AbstractHook>, AbstractHook> hooks = new HashMap<>();
 
     public void init() {
-        final PluginManager pm = plugin.getServer().getPluginManager();
+        PluginManager pm = plugin.getServer().getPluginManager();
 
         for (Hook hook : Hook.values()) {
             try {
                 if (pm.isPluginEnabled(hook.getPluginName())) {
                     AbstractHook ah = make(hook.getClazz(), plugin);
                     if (ah != null) {
-                        ah.init();
-                        plugin.getServer().getPluginManager().registerEvents(ah, plugin);
+                        plugin.bindTerminable(ah);
                         hooks.put(hook.getClazz(), ah);
                     }
 
@@ -60,23 +58,16 @@ public class HookManager {
         }
     }
 
-    public void shutdown() {
-        for (AbstractHook ah : hooks.values()) {
-            ah.shutdown();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     public <T extends AbstractHook> T get(Class<T> c) {
-        if (!isHooked(c)) return null;
-        return (T) hooks.get(c);
+        AbstractHook ret = hooks.get(c);
+        return ret == null ? null : c.cast(ret);
     }
 
-    public <T extends AbstractHook> boolean isHooked(Class<T> c) {
+    public boolean isHooked(Class<? extends AbstractHook> c) {
         return hooks.containsKey(c);
     }
 
-    private static AbstractHook make(Class<? extends AbstractHook> clazz, Plugin plugin) throws Exception {
+    private static AbstractHook make(Class<? extends AbstractHook> clazz, ConditionalPerms plugin) throws Exception {
         Constructor constructor = clazz.getDeclaredConstructor(ConditionalPerms.class);
         constructor.setAccessible(true);
         return (AbstractHook) constructor.newInstance(plugin);

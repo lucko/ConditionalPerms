@@ -26,9 +26,12 @@ import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.events.PlayerFactionsRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.impl.FactionsHook;
 import me.lucko.conditionalperms.utils.FactionsRegion;
+import me.lucko.helper.Events;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
+
+import java.util.function.Consumer;
 
 public class InFactionsLand extends AbstractCondition {
     private final FactionsRegion r;
@@ -43,8 +46,10 @@ public class InFactionsLand extends AbstractCondition {
         return getPlugin().getHookManager().get(FactionsHook.class).getRegion(player).equals(r);
     }
 
-    @EventHandler
-    public void onRegionChange(PlayerFactionsRegionChangeEvent e) {
-        getPlugin().refreshPlayer(e.getPlayer(), 5L);
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Events.subscribe(PlayerFactionsRegionChangeEvent.class)
+                .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 5L))
+                .register(consumer);
     }
 }

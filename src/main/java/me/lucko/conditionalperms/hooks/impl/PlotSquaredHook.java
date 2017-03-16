@@ -29,9 +29,12 @@ import com.plotsquared.bukkit.events.PlayerLeavePlotEvent;
 
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
+import me.lucko.helper.Events;
+import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
+
+import java.util.function.Consumer;
 
 public class PlotSquaredHook extends AbstractHook {
     PlotSquaredHook(ConditionalPerms plugin) {
@@ -39,37 +42,30 @@ public class PlotSquaredHook extends AbstractHook {
     }
 
     public boolean isInPlot(Player player) {
-        final PlotPlayer pp = PlotPlayer.wrap(player);
-        final Plot plot = pp.getCurrentPlot();
+        PlotPlayer pp = PlotPlayer.wrap(player);
+        Plot plot = pp.getCurrentPlot();
         return plot != null;
     }
 
     public boolean isInOwnPlot(Player player) {
-        final PlotPlayer pp = PlotPlayer.wrap(player);
-        final Plot plot = pp.getCurrentPlot();
+        PlotPlayer pp = PlotPlayer.wrap(player);
+        Plot plot = pp.getCurrentPlot();
         return plot != null && plot.isOwner(pp.getUUID());
     }
 
     /*
      * Pass on PlotSquared events if the hook is enabled.
      */
-    @EventHandler
-    public void onPlayerLeavePlot(PlayerLeavePlotEvent e) {
-        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
-            return;
-        }
+    @Override
+    public void bind(Consumer<Terminable> consumer) {
+        Events.subscribe(PlayerLeavePlotEvent.class)
+                .filter(e -> shouldCheck(PlotSquaredHook.class, e.getPlayer().getUniqueId()))
+                .handler(e -> getPlugin().getServer().getPluginManager().callEvent(new me.lucko.conditionalperms.events.PlayerLeavePlotEvent(e.getPlayer())))
+                .register(consumer);
 
-        getPlugin().getServer().getPluginManager()
-                .callEvent(new me.lucko.conditionalperms.events.PlayerLeavePlotEvent(e.getPlayer()));
-    }
-
-    @EventHandler
-    public void onPlayerEnterPlotEvent(PlayerEnterPlotEvent e) {
-        if (!shouldCheck(getClass(), e.getPlayer().getUniqueId())) {
-            return;
-        }
-
-        getPlugin().getServer().getPluginManager()
-                .callEvent(new me.lucko.conditionalperms.events.PlayerEnterPlotEvent(e.getPlayer()));
+        Events.subscribe(PlayerEnterPlotEvent.class)
+                .filter(e -> shouldCheck(PlotSquaredHook.class, e.getPlayer().getUniqueId()))
+                .handler(e -> getPlugin().getServer().getPluginManager().callEvent(new me.lucko.conditionalperms.events.PlayerEnterPlotEvent(e.getPlayer())))
+                .register(consumer);
     }
 }

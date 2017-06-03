@@ -34,7 +34,7 @@ import me.lucko.conditionalperms.events.PlayerEnterRegionEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveRegionEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.helper.Events;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

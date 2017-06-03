@@ -28,7 +28,7 @@ import me.lucko.conditionalperms.events.PlayerLeaveCombatEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.helper.Events;
 import me.lucko.helper.Scheduler;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 
 import net.minelink.ctplus.CombatTagPlus;
 import net.minelink.ctplus.TagManager;

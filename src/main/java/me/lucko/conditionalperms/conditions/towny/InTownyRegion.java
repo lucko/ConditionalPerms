@@ -27,7 +27,7 @@ import me.lucko.conditionalperms.events.PlayerTownyRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.impl.TownyHook;
 import me.lucko.conditionalperms.utils.TownyRegion;
 import me.lucko.helper.Events;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 
 import org.bukkit.entity.Player;
 

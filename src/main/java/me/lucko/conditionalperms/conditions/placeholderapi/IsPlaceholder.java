@@ -24,7 +24,7 @@ package me.lucko.conditionalperms.conditions.placeholderapi;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.hooks.impl.PlaceholderAPIHook;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 
 import org.bukkit.entity.Player;
 

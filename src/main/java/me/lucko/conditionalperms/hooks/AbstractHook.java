@@ -27,7 +27,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import me.lucko.conditionalperms.ConditionalPerms;
-import me.lucko.helper.utils.CompositeTerminable;
+import me.lucko.helper.terminable.CompositeTerminable;
 
 import java.util.UUID;
 

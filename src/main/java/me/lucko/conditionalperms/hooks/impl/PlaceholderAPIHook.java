@@ -27,7 +27,7 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.helper.Scheduler;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 
 import org.bukkit.entity.Player;
 

@@ -24,7 +24,7 @@ package me.lucko.conditionalperms.conditions.bukkit;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.helper.Events;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;

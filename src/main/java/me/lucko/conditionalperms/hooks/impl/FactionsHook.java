@@ -27,7 +27,7 @@ import me.lucko.conditionalperms.events.PlayerFactionsRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.utils.FactionsRegion;
 import me.lucko.helper.Events;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 import me.markeh.factionsframework.FactionsFramework;
 import me.markeh.factionsframework.entities.FPlayer;
 import me.markeh.factionsframework.entities.FPlayers;

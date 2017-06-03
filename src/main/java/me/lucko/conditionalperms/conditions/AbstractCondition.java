@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
-import me.lucko.helper.utils.CompositeTerminable;
+import me.lucko.helper.terminable.CompositeTerminable;
 
 import org.bukkit.entity.Player;
 

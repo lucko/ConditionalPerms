@@ -54,7 +54,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>false</minimizeJar>
+                            <minimizeJar>true</minimizeJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
@@ -76,18 +76,6 @@
                                     <shadedPattern>me.lucko.conditionalperms.lib.helper</shadedPattern>
                                 </relocation>
                             </relocations>
-                            <filters>
-                                <filter>
-                                    <artifact>me.lucko:helper</artifact>
-                                    <includes>
-                                        <include>me/lucko/helper/**</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>me/lucko/helper/menu/**</exclude>
-                                        <exclude>me/lucko/helper/item/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
                         </configuration>
                     </execution>
                 </executions>
@@ -107,8 +95,14 @@
         <dependency>
             <groupId>me.lucko</groupId>
             <artifactId>helper</artifactId>
-            <version>1.2.10</version>
+            <version>1.5.5</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.flowpowered</groupId>
+                    <artifactId>flow-math</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--WorldGuard-->
         <dependency>

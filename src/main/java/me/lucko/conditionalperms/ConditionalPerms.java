@@ -35,9 +35,9 @@ import me.lucko.conditionalperms.hooks.HookManager;
 import me.lucko.helper.Events;
 import me.lucko.helper.Scheduler;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import me.lucko.helper.terminable.CompositeTerminable;
+import me.lucko.helper.terminable.Terminable;
 import me.lucko.helper.utils.Color;
-import me.lucko.helper.utils.CompositeTerminable;
-import me.lucko.helper.utils.Terminable;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -256,5 +256,17 @@ public class ConditionalPerms extends ExtendedJavaPlugin implements CompositeTer
 
     private static void msg(CommandSender sender, String message) {
         sender.sendMessage(Color.colorize("&8&l[&fConditionalPerms&8&l] &7" + message));
+    }
+
+    // for maven shade
+    private void ensureLoad() {
+        me.markeh.factionsframework.layer.layer_1_6.Command_1_6.class.getName();
+        me.markeh.factionsframework.layer.layer_1_8.Command_1_8.class.getName();
+        me.markeh.factionsframework.layer.layer_2_6.Command_2_6.class.getName();
+        me.markeh.factionsframework.layer.layer_2_7.Command_2_7.class.getName();
+        me.markeh.factionsframework.layer.layer_2_8_2.Command_2_8_2.class.getName();
+        me.markeh.factionsframework.layer.layer_2_8_6.Command_2_8_6.class.getName();
+        me.markeh.factionsframework.layer.layer_2_8_8.Command_2_8_8.class.getName();
+        me.markeh.factionsframework.layer.layer_2_8_16.Command_2_8_16.class.getName();
     }
 }

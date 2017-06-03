@@ -27,7 +27,7 @@ import me.lucko.conditionalperms.events.PlayerEnterPlotEvent;
 import me.lucko.conditionalperms.events.PlayerLeavePlotEvent;
 import me.lucko.conditionalperms.hooks.impl.PlotSquaredHook;
 import me.lucko.helper.Events;
-import me.lucko.helper.utils.Terminable;
+import me.lucko.helper.terminable.Terminable;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;

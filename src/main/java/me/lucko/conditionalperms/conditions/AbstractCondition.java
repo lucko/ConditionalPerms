@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
-import me.lucko.helper.terminable.CompositeTerminable;
+import me.lucko.helper.terminable.composite.CompositeTerminable;
 
 import org.bukkit.entity.Player;
 
@@ -51,7 +51,7 @@ public abstract class AbstractCondition implements CompositeTerminable {
 
     public void init(ConditionalPerms plugin) {
         this.plugin = plugin;
-        plugin.bindTerminable(this);
+        plugin.bindComposite(this);
     }
 
     public abstract boolean shouldApply(Player player, String parameter);

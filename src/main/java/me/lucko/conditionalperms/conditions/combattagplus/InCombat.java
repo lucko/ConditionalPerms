@@ -27,11 +27,9 @@ import me.lucko.conditionalperms.events.PlayerEnterCombatEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveCombatEvent;
 import me.lucko.conditionalperms.hooks.impl.CombatTagPlusHook;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
-
-import java.util.function.Consumer;
 
 public class InCombat extends AbstractCondition {
     public InCombat() {
@@ -44,7 +42,7 @@ public class InCombat extends AbstractCondition {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerEnterCombatEvent.class)
                 .handler(e -> {
                     if (e.getVictim() != null) {
@@ -54,10 +52,10 @@ public class InCombat extends AbstractCondition {
                         getPlugin().refreshPlayer(e.getAttacker(), 1L);
                     }
                 })
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerLeaveCombatEvent.class)
                 .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
-                .register(consumer);
+                .bindWith(consumer);
     }
 }

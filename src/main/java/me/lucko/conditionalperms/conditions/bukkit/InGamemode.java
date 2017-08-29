@@ -24,13 +24,11 @@ package me.lucko.conditionalperms.conditions.bukkit;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
-
-import java.util.function.Consumer;
 
 public class InGamemode extends AbstractCondition {
     public InGamemode() {
@@ -48,9 +46,9 @@ public class InGamemode extends AbstractCondition {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerGameModeChangeEvent.class)
                 .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
-                .register(consumer);
+                .bindWith(consumer);
     }
 }

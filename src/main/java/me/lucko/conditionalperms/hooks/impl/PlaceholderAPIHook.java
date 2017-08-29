@@ -27,11 +27,9 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.helper.Scheduler;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
-
-import java.util.function.Consumer;
 
 public class PlaceholderAPIHook extends AbstractHook implements Runnable {
     public PlaceholderAPIHook(ConditionalPerms plugin) {
@@ -39,8 +37,8 @@ public class PlaceholderAPIHook extends AbstractHook implements Runnable {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
-        Scheduler.runTaskRepeatingSync(this, 1L, 400L).register(consumer);
+    public void setup(TerminableConsumer consumer) {
+        Scheduler.runTaskRepeatingSync(this, 1L, 400L).bindWith(consumer);
     }
 
     @Override

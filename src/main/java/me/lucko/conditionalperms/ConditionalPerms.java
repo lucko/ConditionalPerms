@@ -35,8 +35,8 @@ import me.lucko.conditionalperms.hooks.HookManager;
 import me.lucko.helper.Events;
 import me.lucko.helper.Scheduler;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
-import me.lucko.helper.terminable.CompositeTerminable;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
+import me.lucko.helper.terminable.composite.CompositeTerminable;
 import me.lucko.helper.utils.Color;
 
 import org.bukkit.command.Command;
@@ -53,7 +53,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ConditionalPerms extends ExtendedJavaPlugin implements CompositeTerminable {
@@ -80,8 +79,8 @@ public class ConditionalPerms extends ExtendedJavaPlugin implements CompositeTer
     }
 
     @Override
-    public void onEnable() {
-        bindTerminable(this);
+    public void enable() {
+        bindComposite(this);
 
         for (Condition condition : Condition.values()) {
             condition.getCondition().init(this);
@@ -92,21 +91,21 @@ public class ConditionalPerms extends ExtendedJavaPlugin implements CompositeTer
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerLoginEvent.class)
                 .handler(e -> attachments.put(e.getPlayer().getUniqueId(), e.getPlayer().addAttachment(this)))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerJoinEvent.class)
                 .handler(e -> {
                    refreshPlayer(e.getPlayer());
                    refreshPlayer(e.getPlayer(), 20L);
                 })
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerQuitEvent.class)
                 .handler(e -> e.getPlayer().removeAttachment(attachments.remove(e.getPlayer().getUniqueId())))
-                .register(consumer);
+                .bindWith(consumer);
     }
 
     public void refreshPlayer(final Player player, long delay) {

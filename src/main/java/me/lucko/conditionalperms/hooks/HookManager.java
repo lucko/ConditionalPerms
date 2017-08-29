@@ -45,7 +45,7 @@ public class HookManager {
                 if (pm.isPluginEnabled(hook.getPluginName())) {
                     AbstractHook ah = make(hook.getClazz(), plugin);
                     if (ah != null) {
-                        plugin.bindTerminable(ah);
+                        plugin.bindComposite(ah);
                         hooks.put(hook.getClazz(), ah);
                     }
 

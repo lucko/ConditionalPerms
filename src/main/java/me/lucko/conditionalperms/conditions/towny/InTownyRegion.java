@@ -27,11 +27,9 @@ import me.lucko.conditionalperms.events.PlayerTownyRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.impl.TownyHook;
 import me.lucko.conditionalperms.utils.TownyRegion;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
-
-import java.util.function.Consumer;
 
 public class InTownyRegion extends AbstractCondition {
     private final TownyRegion r;
@@ -48,9 +46,9 @@ public class InTownyRegion extends AbstractCondition {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerTownyRegionChangeEvent.class)
                 .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 5L))
-                .register(consumer);
+                .bindWith(consumer);
     }
 }

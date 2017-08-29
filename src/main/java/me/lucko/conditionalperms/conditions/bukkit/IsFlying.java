@@ -24,12 +24,10 @@ package me.lucko.conditionalperms.conditions.bukkit;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
-
-import java.util.function.Consumer;
 
 public class IsFlying extends AbstractCondition {
     public IsFlying() {
@@ -42,9 +40,9 @@ public class IsFlying extends AbstractCondition {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerToggleFlightEvent.class)
                 .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
-                .register(consumer);
+                .bindWith(consumer);
     }
 }

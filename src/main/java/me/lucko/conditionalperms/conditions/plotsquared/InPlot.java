@@ -27,12 +27,10 @@ import me.lucko.conditionalperms.events.PlayerEnterPlotEvent;
 import me.lucko.conditionalperms.events.PlayerLeavePlotEvent;
 import me.lucko.conditionalperms.hooks.impl.PlotSquaredHook;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
-
-import java.util.function.Consumer;
 
 public class InPlot extends AbstractCondition {
     public InPlot() {
@@ -45,9 +43,9 @@ public class InPlot extends AbstractCondition {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.merge(PlayerEvent.class, PlayerEnterPlotEvent.class, PlayerLeavePlotEvent.class)
                 .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 5L))
-                .register(consumer);
+                .bindWith(consumer);
     }
 }

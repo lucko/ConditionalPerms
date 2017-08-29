@@ -34,7 +34,7 @@ import me.lucko.conditionalperms.events.PlayerEnterRegionEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveRegionEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -48,7 +48,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class WorldGuardHook extends AbstractHook {
     private WorldGuardPlugin worldGuard;
@@ -86,14 +85,14 @@ public class WorldGuardHook extends AbstractHook {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerJoinEvent.class)
                 .handler(e -> regions.put(e.getPlayer().getUniqueId(), new HashSet<>(queryRegions(e.getPlayer().getLocation()))))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerQuitEvent.class)
                 .handler(e -> regions.remove(e.getPlayer().getUniqueId()))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerMoveEvent.class)
                 .filter(Events.DEFAULT_FILTERS.ignoreSameBlock())
@@ -119,6 +118,6 @@ public class WorldGuardHook extends AbstractHook {
                     previouslyIn.clear();
                     previouslyIn.addAll(now);
                 })
-                .register(consumer);
+                .bindWith(consumer);
     }
 }

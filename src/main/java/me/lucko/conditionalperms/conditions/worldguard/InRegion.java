@@ -27,12 +27,10 @@ import me.lucko.conditionalperms.events.PlayerEnterRegionEvent;
 import me.lucko.conditionalperms.events.PlayerLeaveRegionEvent;
 import me.lucko.conditionalperms.hooks.impl.WorldGuardHook;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
-
-import java.util.function.Consumer;
 
 public class InRegion extends AbstractCondition {
     public InRegion() {
@@ -45,9 +43,9 @@ public class InRegion extends AbstractCondition {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.merge(PlayerEvent.class, PlayerEnterRegionEvent.class, PlayerLeaveRegionEvent.class)
                 .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
-                .register(consumer);
+                .bindWith(consumer);
     }
 }

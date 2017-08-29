@@ -28,7 +28,7 @@ import me.lucko.conditionalperms.events.PlayerLeaveCombatEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.helper.Events;
 import me.lucko.helper.Scheduler;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import net.minelink.ctplus.CombatTagPlus;
 import net.minelink.ctplus.TagManager;
@@ -40,7 +40,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class CombatTagPlusHook extends AbstractHook implements Runnable {
     private final Set<UUID> taggedPlayers = new HashSet<>();
@@ -57,13 +56,13 @@ public class CombatTagPlusHook extends AbstractHook implements Runnable {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Scheduler.runTaskRepeatingSync(this, 1L, 20L)
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerQuitEvent.class)
                 .handler(e -> taggedPlayers.remove(e.getPlayer().getUniqueId()))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerCombatTagEvent.class)
                 .handler(e -> {
@@ -73,7 +72,7 @@ public class CombatTagPlusHook extends AbstractHook implements Runnable {
                         }
                     }
                     if (e.getAttacker() != null) {
-                        if (shouldCheck(CombatTagPlusHook.class, e.getVictim().getUniqueId())) {
+                        if (shouldCheck(CombatTagPlusHook.class, e.getAttacker().getUniqueId())) {
                             taggedPlayers.add(e.getVictim().getUniqueId());
                         }
                     }
@@ -81,7 +80,7 @@ public class CombatTagPlusHook extends AbstractHook implements Runnable {
                     // Pass on CombatTagPlus events if the hook is enabled.
                     getPlugin().getServer().getPluginManager().callEvent(new PlayerEnterCombatEvent(e.getPlayer(), e.getVictim(), e.getAttacker()));
                 })
-                .register(consumer);
+                .bindWith(consumer);
     }
 
     @Override

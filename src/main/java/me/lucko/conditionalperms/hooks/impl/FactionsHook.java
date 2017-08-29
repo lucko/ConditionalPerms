@@ -27,7 +27,7 @@ import me.lucko.conditionalperms.events.PlayerFactionsRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.utils.FactionsRegion;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 import me.markeh.factionsframework.FactionsFramework;
 import me.markeh.factionsframework.entities.FPlayer;
 import me.markeh.factionsframework.entities.FPlayers;
@@ -45,7 +45,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class FactionsHook extends AbstractHook {
     private Map<UUID, FactionsRegion> regions = new HashMap<>();
@@ -60,19 +59,16 @@ public class FactionsHook extends AbstractHook {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
-        consumer.accept(() -> {
-            FactionsFramework.get().stop();
-            return true;
-        });
+    public void setup(TerminableConsumer consumer) {
+        consumer.bindRunnable(() -> FactionsFramework.get().stop());
 
         Events.subscribe(PlayerLoginEvent.class)
                 .handler(e -> regions.put(e.getPlayer().getUniqueId(), getRegion(e.getPlayer())))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerQuitEvent.class)
                 .handler(e -> regions.remove(e.getPlayer().getUniqueId()))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerMoveEvent.class)
                 .filter(Events.DEFAULT_FILTERS.ignoreSameChunk())
@@ -88,7 +84,7 @@ public class FactionsHook extends AbstractHook {
                     getPlugin().getServer().getPluginManager().callEvent(new PlayerFactionsRegionChangeEvent(e.getPlayer(), from, to));
                     regions.put(e.getPlayer().getUniqueId(), to);
                 })
-                .register(consumer);
+                .bindWith(consumer);
     }
 
     public FactionsRegion getRegion(Player player) {

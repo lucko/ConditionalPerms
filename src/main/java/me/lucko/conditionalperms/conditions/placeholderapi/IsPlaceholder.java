@@ -24,11 +24,9 @@ package me.lucko.conditionalperms.conditions.placeholderapi;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.hooks.impl.PlaceholderAPIHook;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
-
-import java.util.function.Consumer;
 
 public class IsPlaceholder extends AbstractCondition {
     public IsPlaceholder() {
@@ -50,7 +48,7 @@ public class IsPlaceholder extends AbstractCondition {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         // do nothing
     }
 }

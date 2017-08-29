@@ -30,7 +30,7 @@ import me.lucko.conditionalperms.events.PlayerTownyRegionChangeEvent;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.conditionalperms.utils.TownyRegion;
 import me.lucko.helper.Events;
-import me.lucko.helper.terminable.Terminable;
+import me.lucko.helper.terminable.TerminableConsumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -40,7 +40,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class TownyHook extends AbstractHook {
 
@@ -53,14 +52,14 @@ public class TownyHook extends AbstractHook {
     }
 
     @Override
-    public void bind(Consumer<Terminable> consumer) {
+    public void setup(TerminableConsumer consumer) {
         Events.subscribe(PlayerJoinEvent.class)
                 .handler(e -> regions.put(e.getPlayer().getUniqueId(), getRegion(e.getPlayer())))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerQuitEvent.class)
                 .handler(e -> regions.remove(e.getPlayer().getUniqueId()))
-                .register(consumer);
+                .bindWith(consumer);
 
         Events.subscribe(PlayerMoveEvent.class)
                 .filter(Events.DEFAULT_FILTERS.ignoreSameBlockAndY())

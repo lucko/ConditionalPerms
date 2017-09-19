@@ -95,7 +95,7 @@
         <dependency>
             <groupId>me.lucko</groupId>
             <artifactId>helper</artifactId>
-            <version>2.0.2</version>
+            <version>2.1.4</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -169,6 +169,10 @@
         <repository>
             <id>luck-repo</id>
             <url>https://repo.lucko.me/</url>
+        </repository>
+        <repository>
+            <id>minelink-repo</id>
+            <url>http://repo.minelink.net/content/groups/public/</url>
         </repository>
     </repositories>
 

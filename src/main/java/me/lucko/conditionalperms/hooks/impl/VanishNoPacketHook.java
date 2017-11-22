@@ -38,8 +38,8 @@ public class VanishNoPacketHook extends AbstractHook {
         return ((VanishPlugin) Bukkit.getPluginManager().getPlugin("VanishNoPacket")).getManager().isVanished(player);
     }
 
-	@Override
-	public void setup(TerminableConsumer consumer) {
-	}
+    @Override
+    public void setup(TerminableConsumer consumer) {
+    }
 }
 

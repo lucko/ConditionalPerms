@@ -37,7 +37,7 @@ enum Hook {
     WORLD_GUARD("WorldGuard", WorldGuardHook.class),
     PLACEHOLDER_API("PlaceholderAPI", PlaceholderAPIHook.class),
     TOWNY("Towny", TownyHook.class),
-    VANISH_NO_PACKET("VanishNoPacket",VanishNoPacketHook.class);
+    VANISH_NO_PACKET("VanishNoPacket", VanishNoPacketHook.class);
 
     private final String pluginName;
     private final Class<? extends AbstractHook> clazz;

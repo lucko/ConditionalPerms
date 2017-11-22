@@ -23,12 +23,10 @@
 package me.lucko.conditionalperms.conditions.vanishnopacket;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
-import me.lucko.conditionalperms.events.PlayerToggleVanishEvent;
+import me.lucko.conditionalperms.hooks.impl.VanishNoPacketHook;
 import me.lucko.helper.Events;
 import me.lucko.helper.terminable.TerminableConsumer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.kitteh.vanish.VanishPlugin;
 import org.kitteh.vanish.event.VanishStatusChangeEvent;
 
 public class IsVanished extends AbstractCondition {
@@ -38,12 +36,12 @@ public class IsVanished extends AbstractCondition {
 
 	@Override
 	public boolean shouldApply(Player player, String parameter) {
-		return ((VanishPlugin) Bukkit.getPluginManager().getPlugin("VanishNoPacket")).getManager().isVanished(player);
+		return getPlugin().getHookManager().get(VanishNoPacketHook.class).isVanished(player);
 	}
 
 	@Override
 	public void setup(TerminableConsumer consumer) {
-		Events.subscribe(PlayerToggleVanishEvent.class)
+		Events.subscribe(VanishStatusChangeEvent.class)
 				.handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
 				.bindWith(consumer);
 	}

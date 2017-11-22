@@ -20,25 +20,26 @@
  *  SOFTWARE.
  */
 
-package me.lucko.conditionalperms.hooks;
+package me.lucko.conditionalperms.events;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 
-import me.lucko.conditionalperms.hooks.impl.*;
+public class PlayerToggleVanishEvent extends PlayerEvent {
+    private static final HandlerList HANDLER_LIST = new HandlerList();
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
 
-@Getter
-@AllArgsConstructor
-enum Hook {
+    public PlayerToggleVanishEvent(Player who) {
+        super(who);
+    }
 
-    COMBAT_TAB_PLUS("CombatTagPlus", CombatTagPlusHook.class),
-    FACTIONS("Factions", FactionsHook.class),
-    PLOT_SQUARED("PlotSquared", PlotSquaredHook.class),
-    WORLD_GUARD("WorldGuard", WorldGuardHook.class),
-    PLACEHOLDER_API("PlaceholderAPI", PlaceholderAPIHook.class),
-    TOWNY("Towny", TownyHook.class),
-    VANISH_NO_PACKET("VanishNoPacket",VanishNoPacketHook.class);
-
-    private final String pluginName;
-    private final Class<? extends AbstractHook> clazz;
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
+    }
 }
+

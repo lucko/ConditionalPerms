@@ -20,25 +20,31 @@
  *  SOFTWARE.
  */
 
-package me.lucko.conditionalperms.hooks;
+package me.lucko.conditionalperms.hooks.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import me.lucko.conditionalperms.ConditionalPerms;
+import me.lucko.conditionalperms.hooks.AbstractHook;
+import me.lucko.helper.Events;
+import me.lucko.helper.terminable.TerminableConsumer;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.kitteh.vanish.VanishPlugin;
+import org.kitteh.vanish.event.VanishStatusChangeEvent;
 
-import me.lucko.conditionalperms.hooks.impl.*;
+public class VanishNoPacketHook extends AbstractHook {
+    VanishNoPacketHook(ConditionalPerms plugin) {
+        super(plugin);
+    }
 
-@Getter
-@AllArgsConstructor
-enum Hook {
+    public boolean isVanished(Player player) {
+        return ((VanishPlugin) Bukkit.getPluginManager().getPlugin("VanishNoPacket")).getManager().isVanished(player);
+    }
 
-    COMBAT_TAB_PLUS("CombatTagPlus", CombatTagPlusHook.class),
-    FACTIONS("Factions", FactionsHook.class),
-    PLOT_SQUARED("PlotSquared", PlotSquaredHook.class),
-    WORLD_GUARD("WorldGuard", WorldGuardHook.class),
-    PLACEHOLDER_API("PlaceholderAPI", PlaceholderAPIHook.class),
-    TOWNY("Towny", TownyHook.class),
-    VANISH_NO_PACKET("VanishNoPacket",VanishNoPacketHook.class);
-
-    private final String pluginName;
-    private final Class<? extends AbstractHook> clazz;
+    @Override
+    public void setup(TerminableConsumer consumer) {
+        Events.subscribe(VanishStatusChangeEvent.class)
+                .handler(e -> getPlugin().getServer().getPluginManager().callEvent(new me.lucko.conditionalperms.events.PlayerToggleVanishEvent(e.getPlayer())))
+                .bindWith(consumer);
+    }
 }
+

@@ -25,6 +25,7 @@ The general usage is `cperms.condition=parameter.your.node`, or if a parameter i
 | is_flying                  | If flying                       | n/a              |
 | in_region                  | If in a WorldGuard region       | the region       |
 | in_combat                  | If combat tagged                | n/a              |
+| is_vanished                | If vanishd (VanishNoPacket)     | n/a              |
 | in_plot                    | If in a PlotSquared plot        | n/a              |
 | in_own_plot                | If in own PlotSquared plot      | n/a              |
 | facs_land_none             | If in a Factions wilderness     | n/a              |

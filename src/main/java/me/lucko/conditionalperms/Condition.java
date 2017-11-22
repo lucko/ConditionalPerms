@@ -35,6 +35,7 @@ import me.lucko.conditionalperms.conditions.placeholderapi.IsPlaceholder;
 import me.lucko.conditionalperms.conditions.plotsquared.InOwnPlot;
 import me.lucko.conditionalperms.conditions.plotsquared.InPlot;
 import me.lucko.conditionalperms.conditions.towny.InTownyRegion;
+import me.lucko.conditionalperms.conditions.vanishnopacket.IsVanished;
 import me.lucko.conditionalperms.conditions.worldguard.InRegion;
 import me.lucko.conditionalperms.utils.FactionsRegion;
 import me.lucko.conditionalperms.utils.TownyRegion;
@@ -48,6 +49,8 @@ enum Condition {
     IS_FLYING(new IsFlying()),
 
     IS_PLACEHOLDER(new IsPlaceholder()),
+
+    IS_VANISHED(new IsVanished()),
 
     IN_REGION(new InRegion()),
 

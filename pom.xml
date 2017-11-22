@@ -159,6 +159,20 @@
             <version>1.16.14</version>
             <scope>provided</scope>
         </dependency>
+        <!--VanishNoPacket-->
+        <dependency>
+            <groupId>org.kitteh</groupId>
+            <artifactId>VanishNoPacket</artifactId>
+            <version>3.19.2-SNAPSHOT</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
 
     <repositories>
@@ -173,6 +187,10 @@
         <repository>
             <id>byteflux-repo</id>
             <url>http://repo.byteflux.net/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>cnaude-repo</id>
+            <url>http://cnaude.org/repo/</url>
         </repository>
     </repositories>
 

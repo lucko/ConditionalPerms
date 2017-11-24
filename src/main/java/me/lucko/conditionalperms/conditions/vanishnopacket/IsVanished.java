@@ -31,7 +31,7 @@ import org.kitteh.vanish.event.VanishStatusChangeEvent;
 
 public class IsVanished extends AbstractCondition {
 	public IsVanished() {
-		super(false);
+		super(false, VanishNoPacketHook.class);
 	}
 
 	@Override
@@ -41,9 +41,6 @@ public class IsVanished extends AbstractCondition {
 
 	@Override
 	public void setup(TerminableConsumer consumer) {
-		Events.subscribe(VanishStatusChangeEvent.class)
-				.handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
-				.bindWith(consumer);
 	}
 }
 

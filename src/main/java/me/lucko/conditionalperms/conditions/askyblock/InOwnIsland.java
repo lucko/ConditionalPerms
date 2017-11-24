@@ -49,8 +49,5 @@ public class InOwnIsland extends AbstractCondition {
 
     @Override
     public void setup(TerminableConsumer consumer) {
-        Events.merge(ASkyBlockEvent.class, IslandEnterEvent.class, IslandExitEvent.class)
-                .handler(e -> getPlugin().refreshPlayer(Bukkit.getPlayer(e.getPlayer()), 1L))
-                .bindWith(consumer);
     }
 }

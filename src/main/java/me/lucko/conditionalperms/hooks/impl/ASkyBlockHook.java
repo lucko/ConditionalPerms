@@ -24,9 +24,14 @@ package me.lucko.conditionalperms.hooks.impl;
 
 import com.wasteofplastic.askyblock.ASkyBlock;
 import com.wasteofplastic.askyblock.Island;
+import com.wasteofplastic.askyblock.events.ASkyBlockEvent;
+import com.wasteofplastic.askyblock.events.IslandEnterEvent;
+import com.wasteofplastic.askyblock.events.IslandExitEvent;
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
+import me.lucko.helper.Events;
 import me.lucko.helper.terminable.TerminableConsumer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 
@@ -46,7 +51,7 @@ public class ASkyBlockHook extends AbstractHook {
 
     public boolean isInOwnIsland(Player player) {
         Island island = askyblock.getGrid().getIslandAt(player.getLocation());
-        return island != null && island.getOwner() == player.getUniqueId();
+        return island != null && island.getOwner().equals(player.getUniqueId());
     }
 
     public boolean isIslandMember(Player player) {
@@ -56,5 +61,8 @@ public class ASkyBlockHook extends AbstractHook {
 
     @Override
     public void setup(TerminableConsumer consumer) {
+        Events.merge(ASkyBlockEvent.class, IslandEnterEvent.class, IslandExitEvent.class)
+                .handler(e -> getPlugin().refreshPlayer(Bukkit.getPlayer(e.getPlayer()), 1L))
+                .bindWith(consumer);
     }
 }

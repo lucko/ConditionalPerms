@@ -20,29 +20,37 @@
  *  SOFTWARE.
  */
 
-package me.lucko.conditionalperms.hooks.impl;
+package me.lucko.conditionalperms.conditions.askyblock;
 
-import me.lucko.conditionalperms.ConditionalPerms;
-import me.lucko.conditionalperms.hooks.AbstractHook;
+import com.wasteofplastic.askyblock.events.ASkyBlockEvent;
+import com.wasteofplastic.askyblock.events.IslandEnterEvent;
+import com.wasteofplastic.askyblock.events.IslandExitEvent;
+import me.lucko.conditionalperms.conditions.AbstractCondition;
+import me.lucko.conditionalperms.events.PlayerEnterPlotEvent;
+import me.lucko.conditionalperms.events.PlayerEnterRegionEvent;
+import me.lucko.conditionalperms.events.PlayerLeaveRegionEvent;
+import me.lucko.conditionalperms.hooks.impl.ASkyBlockHook;
+import me.lucko.conditionalperms.hooks.impl.WorldGuardHook;
+import me.lucko.helper.Events;
 import me.lucko.helper.terminable.TerminableConsumer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.kitteh.vanish.VanishPlugin;
+import org.bukkit.event.player.PlayerEvent;
 
-public class VanishNoPacketHook extends AbstractHook {
-
-    private final VanishPlugin vanishPlugin;
-
-    VanishNoPacketHook(ConditionalPerms plugin) {
-        super(plugin);
-        vanishPlugin = (VanishPlugin) getPlugin().getServer().getPluginManager().getPlugin("VanishNoPacket");
+public class InOwnIsland extends AbstractCondition {
+    public InOwnIsland() {
+        super(false, ASkyBlockHook.class);
     }
 
-    public boolean isVanished(Player player) {
-        return vanishPlugin.getManager().isVanished(player);
+    @Override
+    public boolean shouldApply(Player player, String parameter) {
+        return getPlugin().getHookManager().get(ASkyBlockHook.class).isInOwnIsland(player);
     }
 
     @Override
     public void setup(TerminableConsumer consumer) {
+        Events.merge(ASkyBlockEvent.class, IslandEnterEvent.class, IslandExitEvent.class)
+                .handler(e -> getPlugin().refreshPlayer(Bukkit.getPlayer(e.getPlayer()), 1L))
+                .bindWith(consumer);
     }
 }
-

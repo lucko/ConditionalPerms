@@ -26,6 +26,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
+import me.lucko.conditionalperms.conditions.askyblock.InOwnIsland;
+import me.lucko.conditionalperms.conditions.askyblock.IsIslandMember;
 import me.lucko.conditionalperms.conditions.bukkit.InGamemode;
 import me.lucko.conditionalperms.conditions.bukkit.InWorld;
 import me.lucko.conditionalperms.conditions.bukkit.IsFlying;
@@ -51,6 +53,10 @@ enum Condition {
     IS_PLACEHOLDER(new IsPlaceholder()),
 
     IS_VANISHED(new IsVanished()),
+
+    IN_ISLAND(new InOwnIsland()),
+    IN_OWN_ISLAND(new InOwnIsland()),
+    IS_ISLAND_MEMBER(new IsIslandMember()),
 
     IN_REGION(new InRegion()),
 

@@ -55,9 +55,9 @@ enum Condition {
 
     IS_VANISHED(new IsVanished()),
 
-    IN_ISLAND(new InIsland()),
-    IN_OWN_ISLAND(new InOwnIsland()),
-    IS_ISLAND_MEMBER(new IsIslandMember()),
+    ASKYBLOCK_IN_ISLAND(new InIsland()),
+    ASKYBLOCK_IN_OWN_ISLAND(new InOwnIsland()),
+    ASKYBLOCK_IS_ISLAND_MEMBER(new IsIslandMember()),
 
     IN_REGION(new InRegion()),
 

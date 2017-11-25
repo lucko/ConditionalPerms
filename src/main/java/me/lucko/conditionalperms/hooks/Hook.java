@@ -31,6 +31,7 @@ import me.lucko.conditionalperms.hooks.impl.*;
 @AllArgsConstructor
 enum Hook {
 
+    ACIDISLAND("AcidIsland", AcidIslandHook.class),
     ASKYBLOCK("ASkyBlock", ASkyBlockHook.class),
     COMBAT_TAB_PLUS("CombatTagPlus", CombatTagPlusHook.class),
     FACTIONS("Factions", FactionsHook.class),

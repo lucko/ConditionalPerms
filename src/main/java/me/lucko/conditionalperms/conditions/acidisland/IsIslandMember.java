@@ -20,21 +20,21 @@
  *  SOFTWARE.
  */
 
-package me.lucko.conditionalperms.conditions.askyblock;
+package me.lucko.conditionalperms.conditions.acidisland;
 
 import me.lucko.conditionalperms.conditions.AbstractCondition;
-import me.lucko.conditionalperms.hooks.impl.ASkyBlockHook;
+import me.lucko.conditionalperms.hooks.impl.AcidIslandHook;
 import me.lucko.helper.terminable.TerminableConsumer;
 import org.bukkit.entity.Player;
 
 public class IsIslandMember extends AbstractCondition {
     public IsIslandMember() {
-        super(false, ASkyBlockHook.class);
+        super(false, AcidIslandHook.class);
     }
 
     @Override
     public boolean shouldApply(Player player, String parameter) {
-        return getPlugin().getHookManager().get(ASkyBlockHook.class).isIslandMember(player);
+        return getPlugin().getHookManager().get(AcidIslandHook.class).isIslandMember(player);
     }
 
     @Override

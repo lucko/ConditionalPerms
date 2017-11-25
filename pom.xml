@@ -172,10 +172,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--ASkyBlock-->
         <dependency>
             <groupId>com.wasteofplastic</groupId>
             <artifactId>askyblock</artifactId>
             <version>3.0.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--AcidIsland-->
+        <dependency>
+            <groupId>com.wasteofplastic</groupId>
+            <artifactId>acidisland</artifactId>
+            <version>3.0.8.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -196,10 +204,6 @@
         <repository>
             <id>cnaude-repo</id>
             <url>http://cnaude.org/repo/</url>
-        </repository>
-        <repository>
-            <id>jitpack-repo</id>
-            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 

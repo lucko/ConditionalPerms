@@ -22,14 +22,9 @@
 
 package me.lucko.conditionalperms.conditions.askyblock;
 
-import com.wasteofplastic.askyblock.events.ASkyBlockEvent;
-import com.wasteofplastic.askyblock.events.IslandEnterEvent;
-import com.wasteofplastic.askyblock.events.IslandExitEvent;
 import me.lucko.conditionalperms.conditions.AbstractCondition;
 import me.lucko.conditionalperms.hooks.impl.ASkyBlockHook;
-import me.lucko.helper.Events;
 import me.lucko.helper.terminable.TerminableConsumer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class InIsland extends AbstractCondition {

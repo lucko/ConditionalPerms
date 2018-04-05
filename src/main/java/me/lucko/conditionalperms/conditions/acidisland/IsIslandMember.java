@@ -20,27 +20,24 @@
  *  SOFTWARE.
  */
 
-package me.lucko.conditionalperms.hooks;
+package me.lucko.conditionalperms.conditions.acidisland;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import me.lucko.conditionalperms.conditions.AbstractCondition;
+import me.lucko.conditionalperms.hooks.impl.AcidIslandHook;
+import me.lucko.helper.terminable.TerminableConsumer;
+import org.bukkit.entity.Player;
 
-import me.lucko.conditionalperms.hooks.impl.*;
+public class IsIslandMember extends AbstractCondition {
+    public IsIslandMember() {
+        super(false, AcidIslandHook.class);
+    }
 
-@Getter
-@AllArgsConstructor
-enum Hook {
+    @Override
+    public boolean shouldApply(Player player, String parameter) {
+        return getPlugin().getHookManager().get(AcidIslandHook.class).isIslandMember(player);
+    }
 
-    ACIDISLAND("AcidIsland", AcidIslandHook.class),
-    ASKYBLOCK("ASkyBlock", ASkyBlockHook.class),
-    COMBAT_TAB_PLUS("CombatTagPlus", CombatTagPlusHook.class),
-    FACTIONS("Factions", FactionsHook.class),
-    PLACEHOLDER_API("PlaceholderAPI", PlaceholderAPIHook.class),
-    PLOT_SQUARED("PlotSquared", PlotSquaredHook.class),
-    TOWNY("Towny", TownyHook.class),
-    VANISH_NO_PACKET("VanishNoPacket", VanishNoPacketHook.class),
-    WORLD_GUARD("WorldGuard", WorldGuardHook.class);
-
-    private final String pluginName;
-    private final Class<? extends AbstractHook> clazz;
+    @Override
+    public void setup(TerminableConsumer consumer) {
+    }
 }

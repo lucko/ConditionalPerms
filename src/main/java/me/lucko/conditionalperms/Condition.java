@@ -59,6 +59,14 @@ enum Condition {
     IN_PLOT(new InPlot()),
     IN_OWN_PLOT(new InOwnPlot()),
 
+    ACIDISLAND_IN_ISLAND(new me.lucko.conditionalperms.conditions.acidisland.InIsland()),
+    ACIDISLAND_IN_OWN_ISLAND(new me.lucko.conditionalperms.conditions.acidisland.InOwnIsland()),
+    ACIDISLAND_IS_ISLAND_MEMBER(new me.lucko.conditionalperms.conditions.acidisland.IsIslandMember()),
+
+    ASKYBLOCK_IN_ISLAND(new me.lucko.conditionalperms.conditions.askyblock.InIsland()),
+    ASKYBLOCK_IN_OWN_ISLAND(new me.lucko.conditionalperms.conditions.askyblock.InOwnIsland()),
+    ASKYBLOCK_IS_ISLAND_MEMBER(new me.lucko.conditionalperms.conditions.askyblock.IsIslandMember()),
+
     FACS_LAND_NONE(new InFactionsLand(FactionsRegion.NONE)),
     FACS_LAND_WARZONE(new InFactionsLand(FactionsRegion.WARZONE)),
     FACS_LAND_SAFEZONE(new InFactionsLand(FactionsRegion.SAFEZONE)),

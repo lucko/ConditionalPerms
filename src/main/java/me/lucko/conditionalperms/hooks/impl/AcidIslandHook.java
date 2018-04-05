@@ -22,32 +22,47 @@
 
 package me.lucko.conditionalperms.hooks.impl;
 
+import com.wasteofplastic.acidisland.ASkyBlock;
+import com.wasteofplastic.acidisland.Island;
+import com.wasteofplastic.acidisland.events.ASkyBlockEvent;
+import com.wasteofplastic.acidisland.events.IslandEnterEvent;
+import com.wasteofplastic.acidisland.events.IslandExitEvent;
 import me.lucko.conditionalperms.ConditionalPerms;
 import me.lucko.conditionalperms.hooks.AbstractHook;
 import me.lucko.helper.Events;
 import me.lucko.helper.terminable.TerminableConsumer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.kitteh.vanish.VanishPlugin;
-import org.kitteh.vanish.event.VanishStatusChangeEvent;
 
-public class VanishNoPacketHook extends AbstractHook {
 
-    private final VanishPlugin vanishPlugin;
+public class AcidIslandHook extends AbstractHook {
 
-    VanishNoPacketHook(ConditionalPerms plugin) {
+    private final ASkyBlock acidisland;
+
+    AcidIslandHook(ConditionalPerms plugin) {
         super(plugin);
-        vanishPlugin = (VanishPlugin) getPlugin().getServer().getPluginManager().getPlugin("VanishNoPacket");
+        acidisland = (ASkyBlock) getPlugin().getServer().getPluginManager().getPlugin("AcidIsland");
     }
 
-    public boolean isVanished(Player player) {
-        return vanishPlugin.getManager().isVanished(player);
+    public boolean isInIsland(Player player) {
+        Island island = acidisland.getGrid().getIslandAt(player.getLocation());
+        return island != null;
+    }
+
+    public boolean isInOwnIsland(Player player) {
+        Island island = acidisland.getGrid().getIslandAt(player.getLocation());
+        return island != null && island.getOwner().equals(player.getUniqueId());
+    }
+
+    public boolean isIslandMember(Player player) {
+        Island island = acidisland.getGrid().getIslandAt(player.getLocation());
+        return island != null && island.getMembers().contains(player.getUniqueId());
     }
 
     @Override
     public void setup(TerminableConsumer consumer) {
-        Events.subscribe(VanishStatusChangeEvent.class)
-                .handler(e -> getPlugin().refreshPlayer(e.getPlayer(), 1L))
+        Events.merge(ASkyBlockEvent.class, IslandEnterEvent.class, IslandExitEvent.class)
+                .handler(e -> getPlugin().refreshPlayer(Bukkit.getPlayer(e.getPlayer()), 1L))
                 .bindWith(consumer);
     }
 }
-

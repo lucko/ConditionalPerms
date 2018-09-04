@@ -1,4 +1,15 @@
-# ConditionalPerms [![Build Status](https://ci.lucko.me/job/ConditionalPerms/badge/icon)](https://ci.lucko.me/job/ConditionalPerms/)
+### Now archived
+
+ConditionalPerms is no longer being maintained - and was removed from SpigotMC and my Jenkins a number of months ago.
+
+Similar setups to what was possible with ConditionalPerms can be achieved using [LuckPerms](https://github.com/lucko/LuckPerms) and it's [contexts system](https://github.com/lucko/LuckPerms/wiki/Context).
+
+
+___
+
+
+
+# ConditionalPerms
 Define permissions that only apply when conditions are met
 
 ## Links
